@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
 
       console.log("PROFILE:", profile)
 
-      const redirectTo = profile?.onboarding_complete ? '/dashboard' : '/onboarding'
+const redirectTo = profile?.onboarding_complete ? '/' : '/onboarding'
       return NextResponse.redirect(new URL(redirectTo, requestUrl.origin))
     }
 
