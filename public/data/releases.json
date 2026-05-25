@@ -1,0 +1,282 @@
+[
+  {
+    "id": "blue-lock",
+    "title": "Blue Lock",
+    "emoji": "⚽",
+    "color": "#1a6fc4",
+    "day": "Tuesday",
+    "time_ist": "20:00",
+    "current_chapter": 247,
+    "anilist_id": 116589,
+    "panel_images": [
+      "/panels/blue-lock-247-a.jpg",
+      "/panels/blue-lock-247-b.jpg"
+    ]
+  },
+  {
+    "id": "one-piece",
+    "title": "One Piece",
+    "emoji": "🏴‍☠️",
+    "color": "#ff6b35",
+    "day": "Sunday",
+    "time_ist": "18:00",
+    "current_chapter": 1130,
+    "anilist_id": 21,
+    "panel_images": [
+      "/panels/one-piece-1130-a.jpg",
+      "/panels/one-piece-1130-b.jpg"
+    ]
+  },
+  {
+    "id": "jujutsu-kaisen",
+    "title": "Jujutsu Kaisen",
+    "emoji": "💜",
+    "color": "#8b4789",
+    "day": "Monday",
+    "time_ist": "19:00",
+    "current_chapter": 267,
+    "anilist_id": 119072,
+    "panel_images": [
+      "/panels/jujutsu-kaisen-267-a.jpg",
+      "/panels/jujutsu-kaisen-267-b.jpg"
+    ]
+  },
+  {
+    "id": "chainsaw-man",
+    "title": "Chainsaw Man",
+    "emoji": "🔗",
+    "color": "#ff0000",
+    "day": "Wednesday",
+    "time_ist": "21:00",
+    "current_chapter": 147,
+    "anilist_id": 110887,
+    "panel_images": [
+      "/panels/chainsaw-man-147-a.jpg",
+      "/panels/chainsaw-man-147-b.jpg"
+    ]
+  },
+  {
+    "id": "solo-leveling",
+    "title": "Solo Leveling",
+    "emoji": "⚫",
+    "color": "#1a1a1a",
+    "day": "Friday",
+    "time_ist": "12:00",
+    "current_chapter": 203,
+    "anilist_id": 141390,
+    "panel_images": [
+      "/panels/solo-leveling-203-a.jpg",
+      "/panels/solo-leveling-203-b.jpg"
+    ]
+  },
+  {
+    "id": "berserk",
+    "title": "Berserk",
+    "emoji": "⚔️",
+    "color": "#2c2c2c",
+    "day": "Irregular",
+    "time_ist": "Variable",
+    "current_chapter": 376,
+    "anilist_id": 30,
+    "panel_images": [
+      "/panels/berserk-376-a.jpg",
+      "/panels/berserk-376-b.jpg"
+    ]
+  },
+  {
+    "id": "vinland-saga",
+    "title": "Vinland Saga",
+    "emoji": "🛡️",
+    "color": "#6b4423",
+    "day": "Thursday",
+    "time_ist": "22:00",
+    "current_chapter": 206,
+    "anilist_id": 102119,
+    "panel_images": [
+      "/panels/vinland-saga-206-a.jpg",
+      "/panels/vinland-saga-206-b.jpg"
+    ]
+  },
+  {
+    "id": "demon-slayer",
+    "title": "Demon Slayer",
+    "emoji": "🔥",
+    "color": "#d4003b",
+    "day": "Saturday",
+    "time_ist": "20:00",
+    "current_chapter": 210,
+    "anilist_id": 119432,
+    "panel_images": [
+      "/panels/demon-slayer-210-a.jpg",
+      "/panels/demon-slayer-210-b.jpg"
+    ]
+  },
+  {
+    "id": "my-hero-academia",
+    "title": "My Hero Academia",
+    "emoji": "🦸",
+    "color": "#ffd700",
+    "day": "Monday",
+    "time_ist": "17:00",
+    "current_chapter": 431,
+    "anilist_id": 100855,
+    "panel_images": [
+      "/panels/my-hero-academia-431-a.jpg",
+      "/panels/my-hero-academia-431-b.jpg"
+    ]
+  },
+  {
+    "id": "tower-of-god",
+    "title": "Tower of God",
+    "emoji": "🗼",
+    "color": "#ff8c00",
+    "day": "Friday",
+    "time_ist": "13:00",
+    "current_chapter": 629,
+    "anilist_id": 61393,
+    "panel_images": [
+      "/panels/tower-of-god-629-a.jpg",
+      "/panels/tower-of-god-629-b.jpg"
+    ]
+  },
+  {
+    "id": "spy-x-family",
+    "title": "Spy x Family",
+    "emoji": "🕵️",
+    "color": "#1e90ff",
+    "day": "Sunday",
+    "time_ist": "19:00",
+    "current_chapter": 104,
+    "anilist_id": 129405,
+    "panel_images": [
+      "/panels/spy-x-family-104-a.jpg",
+      "/panels/spy-x-family-104-b.jpg"
+    ]
+  },
+  {
+    "id": "oshi-no-ko",
+    "title": "Oshi no Ko",
+    "emoji": "✨",
+    "color": "#ff69b4",
+    "day": "Tuesday",
+    "time_ist": "21:30",
+    "current_chapter": 169,
+    "anilist_id": 163565,
+    "panel_images": [
+      "/panels/oshi-no-ko-169-a.jpg",
+      "/panels/oshi-no-ko-169-b.jpg"
+    ]
+  },
+  {
+    "id": "dandadan",
+    "title": "Dandadan",
+    "emoji": "👽",
+    "color": "#00ff00",
+    "day": "Wednesday",
+    "time_ist": "20:30",
+    "current_chapter": 195,
+    "anilist_id": 168206,
+    "panel_images": [
+      "/panels/dandadan-195-a.jpg",
+      "/panels/dandadan-195-b.jpg"
+    ]
+  },
+  {
+    "id": "kaiju-no-8",
+    "title": "Kaiju No. 8",
+    "emoji": "🦑",
+    "color": "#ff4500",
+    "day": "Monday",
+    "time_ist": "20:00",
+    "current_chapter": 114,
+    "anilist_id": 139405,
+    "panel_images": [
+      "/panels/kaiju-no-8-114-a.jpg",
+      "/panels/kaiju-no-8-114-b.jpg"
+    ]
+  },
+  {
+    "id": "wind-breaker",
+    "title": "Wind Breaker",
+    "emoji": "💨",
+    "color": "#00bfff",
+    "day": "Saturday",
+    "time_ist": "19:00",
+    "current_chapter": 450,
+    "anilist_id": 145318,
+    "panel_images": [
+      "/panels/wind-breaker-450-a.jpg",
+      "/panels/wind-breaker-450-b.jpg"
+    ]
+  },
+  {
+    "id": "sakamoto-days",
+    "title": "Sakamoto Days",
+    "emoji": "🎯",
+    "color": "#ffffff",
+    "day": "Thursday",
+    "time_ist": "20:30",
+    "current_chapter": 183,
+    "anilist_id": 160764,
+    "panel_images": [
+      "/panels/sakamoto-days-183-a.jpg",
+      "/panels/sakamoto-days-183-b.jpg"
+    ]
+  },
+  {
+    "id": "elusive-samurai",
+    "title": "The Elusive Samurai",
+    "emoji": "🗡️",
+    "color": "#8b0000",
+    "day": "Friday",
+    "time_ist": "14:00",
+    "current_chapter": 106,
+    "anilist_id": 168385,
+    "panel_images": [
+      "/panels/elusive-samurai-106-a.jpg",
+      "/panels/elusive-samurai-106-b.jpg"
+    ]
+  },
+  {
+    "id": "frieren",
+    "title": "Frieren: Beyond Journey's End",
+    "emoji": "🧙",
+    "color": "#9370db",
+    "day": "Sunday",
+    "time_ist": "20:00",
+    "current_chapter": 144,
+    "anilist_id": 143291,
+    "panel_images": [
+      "/panels/frieren-144-a.jpg",
+      "/panels/frieren-144-b.jpg"
+    ]
+  },
+  {
+    "id": "dungeon-meshi",
+    "title": "Dungeon Meshi",
+    "emoji": "🍗",
+    "color": "#8b4513",
+    "day": "Wednesday",
+    "time_ist": "19:30",
+    "current_chapter": 101,
+    "anilist_id": 106656,
+    "panel_images": [
+      "/panels/dungeon-meshi-101-a.jpg",
+      "/panels/dungeon-meshi-101-b.jpg"
+    ]
+  },
+  {
+    "id": "noblesse",
+    "title": "Noblesse",
+    "emoji": "👑",
+    "color": "#4169e1",
+    "day": "Saturday",
+    "time_ist": "18:00",
+    "current_chapter": 571,
+    "anilist_id": 127852,
+    "panel_images": [
+      "/panels/noblesse-571-a.jpg",
+      "/panels/noblesse-571-b.jpg"
+    ]
+  }
+]
