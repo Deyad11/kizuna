@@ -8,8 +8,6 @@
 .navLinks button { background: none; border: none; color: rgba(255,255,255,0.4); font-size: 14px; cursor: pointer; padding: 8px 14px; border-radius: 8px; font-family: inherit; transition: color 0.15s; }
 .navLinks button:hover { color: rgba(255,255,255,0.8); }
 .navActive { color: #fff !important; background: rgba(255,255,255,0.07) !important; }
-.navRight { display: flex; align-items: center; }
-.notifBtn { font-size: 13px; color: rgba(255,255,255,0.4); cursor: pointer; padding: 8px 14px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; }
 
 /* HEADER */
 .header { display: flex; align-items: flex-end; justify-content: space-between; padding: 32px 28px 20px; }
@@ -35,11 +33,10 @@
 
 /* LIVE GRID */
 .liveGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
-.liveCard { position: relative; height: 200px; border-radius: 16px; overflow: hidden; border: none; cursor: pointer; text-align: left; }
-.liveCardBg { position: absolute; inset: 0; background-size: cover; background-position: center; transform: scale(1.04); transition: transform 0.3s; }
-.liveCard:hover .liveCardBg { transform: scale(1.08); }
-.liveCardOverlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(5,5,10,0.92) 0%, rgba(5,5,10,0.3) 60%, transparent 100%); }
-.liveCardContent { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 14px; }
+.liveCard { position: relative; height: 200px; border-radius: 16px; overflow: hidden; border: none; cursor: pointer; text-align: left; display: block; }
+.liveCardImg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: 0; }
+.liveCardOverlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(5,5,10,0.92) 0%, rgba(5,5,10,0.3) 60%, transparent 100%); z-index: 1; }
+.liveCardContent { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 14px; z-index: 2; }
 .liveBadge { display: inline-flex; align-items: center; gap: 6px; background: rgba(52,211,153,0.15); border: 1px solid rgba(52,211,153,0.3); color: #34d399; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; width: fit-content; }
 .liveCardBottom { display: flex; align-items: flex-end; justify-content: space-between; }
 .liveCardInfo { display: flex; flex-direction: column; gap: 2px; }
@@ -53,7 +50,7 @@
 .upcomingRow { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.15s; }
 .upcomingRow:last-child { border-bottom: none; }
 .upcomingRow:hover { background: rgba(255,255,255,0.03); }
-.upcomingCover { width: 40px; height: 40px; border-radius: 8px; background-size: cover; background-position: center; flex-shrink: 0; }
+.upcomingCover { width: 40px; height: 40px; border-radius: 8px; flex-shrink: 0; object-fit: cover; }
 .upcomingInfo { flex: 1; display: flex; flex-direction: column; gap: 2px; }
 .upcomingTitle { font-size: 14px; font-weight: 600; color: #e8e8f0; }
 .upcomingMeta { font-size: 11px; color: rgba(255,255,255,0.3); }

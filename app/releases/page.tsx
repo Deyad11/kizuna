@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import styles from "./releases.module.css";
 
 const RELEASES = [
@@ -149,6 +150,32 @@ const RELEASES = [
 const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
 export default function ReleasesPage() {
+  const [covers, setCovers] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const titles = RELEASES.map((r) => r.title);
+    Promise.all(
+      titles.map(async (title) => {
+        const res = await fetch("https://graphql.anilist.co", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            query: `query($s:String){Page(perPage:1){media(search:$s,sort:POPULARITY_DESC){title{romaji}coverImage{extraLarge}}}}`,
+            variables: { s: title },
+          }),
+        });
+        const data = await res.json();
+        const img = data.data?.Page?.media?.[0]?.coverImage?.extraLarge;
+        return { title, img };
+      }),
+    ).then((results) => {
+      const map: Record<string, string> = {};
+      results.forEach(({ title, img }) => {
+        if (img) map[title] = img;
+      });
+      setCovers(map);
+    });
+  }, []);
   const router = useRouter();
   const liveReleases = RELEASES.filter((r) => r.live);
   const upcoming = RELEASES.filter((r) => !r.live);
@@ -167,7 +194,7 @@ export default function ReleasesPage() {
           <button>about</button>
         </div>
         <div className={styles.navRight}>
-          <span className={styles.notifBtn}>🔔 notifications</span>
+          {/* <span className={styles.notifBtn}>🔔 notifications</span> */}
         </div>
       </nav>
 
@@ -214,9 +241,10 @@ export default function ReleasesPage() {
               className={styles.liveCard}
               onClick={() => router.push(`/chapter/${r.id}`)}
             >
-              <div
-                className={styles.liveCardBg}
-                style={{ backgroundImage: `url(${r.cover})` }}
+              <img
+                src={covers[r.title] || r.cover}
+                alt={r.title}
+                className={styles.liveCardImg}
               />
               <div className={styles.liveCardOverlay} />
               <div className={styles.liveCardContent}>
@@ -247,9 +275,10 @@ export default function ReleasesPage() {
         <div className={styles.upcomingList}>
           {upcoming.map((r) => (
             <div key={r.id} className={styles.upcomingRow}>
-              <div
+              <img
+                src={covers[r.title] || r.cover}
+                alt={r.title}
                 className={styles.upcomingCover}
-                style={{ backgroundImage: `url(${r.cover})` }}
               />
               <div className={styles.upcomingInfo}>
                 <span className={styles.upcomingTitle}>{r.title}</span>
@@ -261,10 +290,10 @@ export default function ReleasesPage() {
                 <span className={styles.upcomingTime}>
                   {r.day} {r.time}
                 </span>
-                <div className={styles.upcomingActions}>
+                {/* <div className={styles.upcomingActions}>
                   <span className={styles.toggleOff} />
                   <span className={styles.notifIcon}>🔔</span>
-                </div>
+                </div> */}
               </div>
             </div>
           ))}
