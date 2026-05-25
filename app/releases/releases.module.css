@@ -1,0 +1,74 @@
+.page { min-height: 100vh; background: #0a0a0f; color: #e8e8f0; font-family: 'DM Sans', 'Helvetica Neue', sans-serif; }
+
+/* NAV */
+.nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 28px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.logo { background: none; border: none; color: #fff; font-size: 17px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; font-family: inherit; }
+.logo span { opacity: 0.6; }
+.navLinks { display: flex; gap: 4px; }
+.navLinks button { background: none; border: none; color: rgba(255,255,255,0.4); font-size: 14px; cursor: pointer; padding: 8px 14px; border-radius: 8px; font-family: inherit; transition: color 0.15s; }
+.navLinks button:hover { color: rgba(255,255,255,0.8); }
+.navActive { color: #fff !important; background: rgba(255,255,255,0.07) !important; }
+.navRight { display: flex; align-items: center; }
+.notifBtn { font-size: 13px; color: rgba(255,255,255,0.4); cursor: pointer; padding: 8px 14px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; }
+
+/* HEADER */
+.header { display: flex; align-items: flex-end; justify-content: space-between; padding: 32px 28px 20px; }
+.heading { font-size: clamp(28px,5vw,40px); font-weight: 900; color: #fff; margin: 0 0 6px; letter-spacing: -0.03em; }
+.headingSub { font-size: 13px; color: rgba(255,255,255,0.35); margin: 0; }
+.tz { font-size: 12px; color: rgba(255,255,255,0.25); }
+
+/* DAY STRIP */
+.dayStrip { display: flex; gap: 4px; padding: 0 28px 24px; overflow-x: auto; }
+.dayCell { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 16px; border-radius: 12px; min-width: 52px; cursor: pointer; position: relative; }
+.dayCellActive { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); }
+.dayLabel { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); }
+.dayCellActive .dayLabel { color: rgba(255,255,255,0.7); }
+.dayNum { font-size: 18px; font-weight: 800; color: rgba(255,255,255,0.25); }
+.dayCellActive .dayNum { color: #fff; }
+.dayDot { width: 4px; height: 4px; background: #6366f1; border-radius: 50%; }
+
+/* SECTIONS */
+.section { padding: 0 28px 32px; }
+.sectionHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.sectionLabel { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: rgba(255,255,255,0.35); text-transform: uppercase; }
+.sectionRight { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: rgba(255,255,255,0.25); }
+
+/* LIVE GRID */
+.liveGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.liveCard { position: relative; height: 200px; border-radius: 16px; overflow: hidden; border: none; cursor: pointer; text-align: left; }
+.liveCardBg { position: absolute; inset: 0; background-size: cover; background-position: center; transform: scale(1.04); transition: transform 0.3s; }
+.liveCard:hover .liveCardBg { transform: scale(1.08); }
+.liveCardOverlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(5,5,10,0.92) 0%, rgba(5,5,10,0.3) 60%, transparent 100%); }
+.liveCardContent { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 14px; }
+.liveBadge { display: inline-flex; align-items: center; gap: 6px; background: rgba(52,211,153,0.15); border: 1px solid rgba(52,211,153,0.3); color: #34d399; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; width: fit-content; }
+.liveCardBottom { display: flex; align-items: flex-end; justify-content: space-between; }
+.liveCardInfo { display: flex; flex-direction: column; gap: 2px; }
+.liveCardTitle { font-size: 16px; font-weight: 800; color: #fff; letter-spacing: -0.01em; }
+.liveCardMeta { font-size: 11px; color: rgba(255,255,255,0.45); }
+.liveCardReaders { font-size: 11px; color: #34d399; font-weight: 600; }
+.liveJoinBtn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 8px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; backdrop-filter: blur(8px); white-space: nowrap; }
+
+/* UPCOMING LIST */
+.upcomingList { display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.07); border-radius: 16px; overflow: hidden; }
+.upcomingRow { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: background 0.15s; }
+.upcomingRow:last-child { border-bottom: none; }
+.upcomingRow:hover { background: rgba(255,255,255,0.03); }
+.upcomingCover { width: 40px; height: 40px; border-radius: 8px; background-size: cover; background-position: center; flex-shrink: 0; }
+.upcomingInfo { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.upcomingTitle { font-size: 14px; font-weight: 600; color: #e8e8f0; }
+.upcomingMeta { font-size: 11px; color: rgba(255,255,255,0.3); }
+.upcomingRight { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.upcomingTime { font-size: 12px; color: rgba(255,255,255,0.35); font-weight: 500; }
+.upcomingActions { display: flex; align-items: center; gap: 8px; }
+.toggleOff { width: 32px; height: 18px; background: rgba(255,255,255,0.1); border-radius: 9px; display: block; }
+.notifIcon { font-size: 14px; opacity: 0.4; cursor: pointer; }
+.notifIcon:hover { opacity: 0.8; }
+
+@media (max-width: 600px) {
+  .nav { padding: 14px 16px; }
+  .navLinks { display: none; }
+  .header { padding: 24px 16px 16px; flex-direction: column; align-items: flex-start; gap: 8px; }
+  .dayStrip { padding: 0 16px 20px; }
+  .section { padding: 0 16px 24px; }
+  .liveGrid { grid-template-columns: 1fr 1fr; gap: 10px; }
+}
