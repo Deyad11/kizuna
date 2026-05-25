@@ -1,67 +1,124 @@
-'use client';
+"use client";
 
-import { useEffect, useState, useRef } from 'react';
-import { useRouter, useParams } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
-import { useQueue } from '@/lib/useQueue';
-import styles from './chapter.module.css';
+import { useEffect, useState, useRef } from "react";
+import { useRouter, useParams } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+import { useQueue } from "@/lib/useQueue";
+import styles from "./chapter.module.css";
 
 // ── STATIC DATA ────────────────────────────────────────────────────
 
 const avatarImages = [
-  'https://s4.anilist.co/file/anilistcdn/character/large/b73935-GG1P3VnXjrGz.png',
-  'https://s4.anilist.co/file/anilistcdn/character/large/b40882-ZOC6vPpaG4D8.png',
-  'https://s4.anilist.co/file/anilistcdn/character/large/b127691-gW8Ljg8RFLgc.png',
-  'https://s4.anilist.co/file/anilistcdn/character/large/b40-JOxFpswA5N0r.png',
-  'https://s4.anilist.co/file/anilistcdn/character/large/b146033-kV3dy7GM2rTQ.png',
+  "https://s4.anilist.co/file/anilistcdn/character/large/b73935-GG1P3VnXjrGz.png",
+  "https://s4.anilist.co/file/anilistcdn/character/large/b40882-ZOC6vPpaG4D8.png",
+  "https://s4.anilist.co/file/anilistcdn/character/large/b127691-gW8Ljg8RFLgc.png",
+  "https://s4.anilist.co/file/anilistcdn/character/large/b40-JOxFpswA5N0r.png",
+  "https://s4.anilist.co/file/anilistcdn/character/large/b146033-kV3dy7GM2rTQ.png",
 ];
 
-const CHAPTER_DATA: Record<string, {
-  title: string; chapter: number; type: string; genres: string[];
-  droppedMinutesAgo: number; coverImage: string; bannerImage: string;
-  peakMinutesLeft: number; avgWait: string; readers: number;
-  readerNames: string[]; activityLevel: 'high' | 'medium' | 'low';
-  searchTitle: string; sceneImage?: string;
-}> = {
-  'blue-lock': {
-    title: 'Blue Lock', chapter: 247, type: 'Manga', genres: ['Sports', 'Action'],
+const CHAPTER_DATA: Record<
+  string,
+  {
+    title: string;
+    chapter: number;
+    type: string;
+    genres: string[];
+    droppedMinutesAgo: number;
+    coverImage: string;
+    bannerImage: string;
+    peakMinutesLeft: number;
+    avgWait: string;
+    readers: number;
+    readerNames: string[];
+    activityLevel: "high" | "medium" | "low";
+    searchTitle: string;
+    sceneImage?: string;
+  }
+> = {
+  "blue-lock": {
+    title: "Blue Lock",
+    chapter: 247,
+    type: "Manga",
+    genres: ["Sports", "Action"],
     droppedMinutesAgo: 28,
-    coverImage: 'https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx114745-yvD3e9G3FruQ.jpg',
-    bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/manga/banner/114745-wFwqwBFNMekX.jpg',
-    peakMinutesLeft: 12, avgWait: '< 60s', readers: 34,
-    readerNames: ['Ryuu', 'Akira', 'Syo'], activityLevel: 'high', searchTitle: 'Blue Lock',
+    coverImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx114745-yvD3e9G3FruQ.jpg",
+    bannerImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/banner/114745-wFwqwBFNMekX.jpg",
+    peakMinutesLeft: 12,
+    avgWait: "< 60s",
+    readers: 34,
+    readerNames: ["Ryuu", "Akira", "Syo"],
+    activityLevel: "high",
+    searchTitle: "Blue Lock",
   },
-  'jujutsu-kaisen': {
-    title: 'Jujutsu Kaisen', chapter: 268, type: 'Manga', genres: ['Action', 'Supernatural'],
+  "jujutsu-kaisen": {
+    title: "Jujutsu Kaisen",
+    chapter: 268,
+    type: "Manga",
+    genres: ["Action", "Supernatural"],
     droppedMinutesAgo: 45,
-    coverImage: 'https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx101517-L2DF9rL0SkVl.jpg',
-    bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/manga/banner/101517-YBIBHNxOFX26.jpg',
-    peakMinutesLeft: 8, avgWait: '< 30s', readers: 67,
-    readerNames: ['Hana', 'Kei', 'Masa'], activityLevel: 'high', searchTitle: 'Jujutsu Kaisen',
+    coverImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx101517-L2DF9rL0SkVl.jpg",
+    bannerImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/banner/101517-YBIBHNxOFX26.jpg",
+    peakMinutesLeft: 8,
+    avgWait: "< 30s",
+    readers: 67,
+    readerNames: ["Hana", "Kei", "Masa"],
+    activityLevel: "high",
+    searchTitle: "Jujutsu Kaisen",
   },
-  'one-piece': {
-    title: 'One Piece', chapter: 1118, type: 'Manga', genres: ['Action', 'Adventure'],
+  "one-piece": {
+    title: "One Piece",
+    chapter: 1118,
+    type: "Manga",
+    genres: ["Action", "Adventure"],
     droppedMinutesAgo: 62,
-    coverImage: 'https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx30013-RKhL3jK5TTVM.jpg',
-    bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/manga/banner/30013-fXITbMH5YzMN.jpg',
-    peakMinutesLeft: 3, avgWait: '< 45s', readers: 27,
-    readerNames: ['Zoro', 'Nami', 'Robin'], activityLevel: 'medium', searchTitle: 'One Piece',
+    coverImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx30013-RKhL3jK5TTVM.jpg",
+    bannerImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/banner/30013-fXITbMH5YzMN.jpg",
+    peakMinutesLeft: 3,
+    avgWait: "< 45s",
+    readers: 27,
+    readerNames: ["Zoro", "Nami", "Robin"],
+    activityLevel: "medium",
+    searchTitle: "One Piece",
   },
-  'tower-of-god': {
-    title: 'Tower of God', chapter: 630, type: 'Webtoon', genres: ['Action', 'Fantasy'],
+  "tower-of-god": {
+    title: "Tower of God",
+    chapter: 630,
+    type: "Webtoon",
+    genres: ["Action", "Fantasy"],
     droppedMinutesAgo: 15,
-    coverImage: 'https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx85143-8bztHkqSSB4m.jpg',
-    bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/manga/banner/85143-aW1JJQCMrQeO.jpg',
-    peakMinutesLeft: 20, avgWait: '< 90s', readers: 44,
-    readerNames: ['Bam', 'Rachel', 'Khun'], activityLevel: 'high', searchTitle: 'Tower of God',
+    coverImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx85143-8bztHkqSSB4m.jpg",
+    bannerImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/banner/85143-aW1JJQCMrQeO.jpg",
+    peakMinutesLeft: 20,
+    avgWait: "< 90s",
+    readers: 44,
+    readerNames: ["Bam", "Rachel", "Khun"],
+    activityLevel: "high",
+    searchTitle: "Tower of God",
   },
-  'dandadan': {
-    title: 'Dandadan', chapter: 142, type: 'Manga', genres: ['Action', 'Romance'],
+  dandadan: {
+    title: "Dandadan",
+    chapter: 142,
+    type: "Manga",
+    genres: ["Action", "Romance"],
     droppedMinutesAgo: 35,
-    coverImage: 'https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx132029-mAXeRZn5V6Rg.jpg',
-    bannerImage: 'https://s4.anilist.co/file/anilistcdn/media/manga/banner/132029-UVT5SCMKWJXO.jpg',
-    peakMinutesLeft: 16, avgWait: '< 60s', readers: 70,
-    readerNames: ['Momo', 'Okarun', 'Jiji'], activityLevel: 'high', searchTitle: 'Dandadan',
+    coverImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx132029-mAXeRZn5V6Rg.jpg",
+    bannerImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/banner/132029-UVT5SCMKWJXO.jpg",
+    peakMinutesLeft: 16,
+    avgWait: "< 60s",
+    readers: 70,
+    readerNames: ["Momo", "Okarun", "Jiji"],
+    activityLevel: "high",
+    searchTitle: "Dandadan",
   },
 };
 
@@ -81,12 +138,14 @@ export default function ChapterPage() {
   const id = params?.id as string;
   const chapter = CHAPTER_DATA[id];
 
-  const [bannerImage, setBannerImage] = useState(chapter?.bannerImage || chapter?.coverImage || '');
+  const [bannerImage, setBannerImage] = useState(
+    chapter?.bannerImage || chapter?.coverImage || "",
+  );
   const [readers, setReaders] = useState(chapter?.readers ?? 0);
   const [mounted, setMounted] = useState(false);
 
   // Auth + interests
-  const [userId, setUserId] = useState('');
+  const [userId, setUserId] = useState("");
   const [titleIds, setTitleIds] = useState<number[]>([]);
   const [authReady, setAuthReady] = useState(false);
 
@@ -99,7 +158,7 @@ export default function ChapterPage() {
   const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Chat input
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // ── SOCKET QUEUE HOOK ──
@@ -130,9 +189,9 @@ export default function ChapterPage() {
       if (user) {
         setUserId(user.id);
         const { data: interests } = await supabase
-          .from('user_interests')
-          .select('title_id')
-          .eq('user_id', user.id);
+          .from("user_interests")
+          .select("title_id")
+          .eq("user_id", user.id);
         setTitleIds(interests?.map((i: any) => i.title_id) ?? []);
       } else {
         // Anonymous — use socket id placeholder, no interests
@@ -146,9 +205,12 @@ export default function ChapterPage() {
   useEffect(() => {
     if (!chapter) return;
     // Reflect real queue depth when available, otherwise drift
-    if (queueDepth > 0) { setReaders(queueDepth); return; }
+    if (queueDepth > 0) {
+      setReaders(queueDepth);
+      return;
+    }
     const interval = setInterval(() => {
-      setReaders(r => Math.max(1, r + Math.floor(Math.random() * 3) - 1));
+      setReaders((r) => Math.max(1, r + Math.floor(Math.random() * 3) - 1));
     }, 3500);
     return () => clearInterval(interval);
   }, [chapter, queueDepth]);
@@ -156,28 +218,32 @@ export default function ChapterPage() {
   // ── ANILIST ARTWORK ──
   useEffect(() => {
     if (!chapter) return;
-    fetch('https://graphql.anilist.co', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query: ANILIST_QUERY, variables: { search: chapter.searchTitle } }),
+    fetch("https://graphql.anilist.co", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        query: ANILIST_QUERY,
+        variables: { search: chapter.searchTitle },
+      }),
     })
-      .then(r => r.json())
-      .then(data => {
+      .then((r) => r.json())
+      .then((data) => {
         const media = data.data?.Page?.media?.[0];
         if (media?.bannerImage) setBannerImage(media.bannerImage);
-        else if (media?.coverImage?.extraLarge) setBannerImage(media.coverImage.extraLarge);
+        else if (media?.coverImage?.extraLarge)
+          setBannerImage(media.coverImage.extraLarge);
       })
       .catch(() => {});
   }, [chapter]);
 
   // ── SCENE REVEAL COUNTDOWN ── triggers when matched
   useEffect(() => {
-    if (status !== 'matched') return;
+    if (status !== "matched") return;
     setRevealCountdown(5);
     setChatUnlocked(false);
 
     countdownRef.current = setInterval(() => {
-      setRevealCountdown(prev => {
+      setRevealCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(countdownRef.current!);
           setChatUnlocked(true);
@@ -187,12 +253,14 @@ export default function ChapterPage() {
       });
     }, 1000);
 
-    return () => { if (countdownRef.current) clearInterval(countdownRef.current); };
+    return () => {
+      if (countdownRef.current) clearInterval(countdownRef.current);
+    };
   }, [status]);
 
   // ── AUTO SCROLL CHAT ──
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const handleJoinQueue = () => {
@@ -204,7 +272,7 @@ export default function ChapterPage() {
     const text = inputText.trim();
     if (!text || !chatUnlocked) return;
     sendMessage(text);
-    setInputText('');
+    setInputText("");
   };
 
   const handleSkip = () => {
@@ -214,8 +282,11 @@ export default function ChapterPage() {
   };
 
   const now = new Date();
-  const dateStr = now.toLocaleDateString('en-US', {
-    weekday: 'long', month: 'long', day: 'numeric', year: 'numeric',
+  const dateStr = now.toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
   });
 
   if (!mounted) return null;
@@ -224,19 +295,22 @@ export default function ChapterPage() {
     return (
       <div className={styles.notFound}>
         <p>Chapter not found.</p>
-        <button onClick={() => router.push('/')}>← back to home</button>
+        <button onClick={() => router.push("/")}>← back to home</button>
       </div>
     );
   }
 
-  const activityWidth = chapter.activityLevel === 'high' ? '82%'
-    : chapter.activityLevel === 'medium' ? '55%' : '30%';
+  const activityWidth =
+    chapter.activityLevel === "high"
+      ? "82%"
+      : chapter.activityLevel === "medium"
+        ? "55%"
+        : "30%";
 
   // ── RENDER: CHAT SCREEN ──────────────────
-  if (status === 'matched') {
+  if (status === "matched") {
     return (
       <div className={styles.chatPage}>
-
         {/* Scene reveal overlay */}
         {!chatUnlocked && (
           <div className={styles.sceneReveal}>
@@ -252,9 +326,7 @@ export default function ChapterPage() {
               <p className={styles.sceneRevealLabel}>
                 You both just read this.
               </p>
-              <div className={styles.sceneCountdown}>
-                {revealCountdown}
-              </div>
+              <div className={styles.sceneCountdown}>{revealCountdown}</div>
               <p className={styles.sceneRevealSub}>
                 Chat opens in {revealCountdown}s
               </p>
@@ -263,18 +335,28 @@ export default function ChapterPage() {
         )}
 
         {/* Chat UI */}
-        <div className={`${styles.chatWrap} ${chatUnlocked ? styles.chatVisible : styles.chatHidden}`}>
-
+        <div
+          className={`${styles.chatWrap} ${chatUnlocked ? styles.chatVisible : styles.chatHidden}`}
+        >
           {/* Chat header */}
           <div className={styles.chatHeader}>
-            <button className={styles.chatBack} onClick={() => router.push('/')}>←</button>
+            <button
+              className={styles.chatBack}
+              onClick={() => router.push("/")}
+            >
+              ←
+            </button>
             <div className={styles.chatHeaderInfo}>
-              <span className={styles.chatTitle}>{chapter.title} ch.{chapter.chapter}</span>
+              <span className={styles.chatTitle}>
+                {chapter.title} ch.{chapter.chapter}
+              </span>
               <span className={styles.chatSub}>
                 {match && `${match.similarity}% taste match`}
               </span>
             </div>
-            <button className={styles.skipBtn} onClick={handleSkip}>skip →</button>
+            <button className={styles.skipBtn} onClick={handleSkip}>
+              skip →
+            </button>
           </div>
 
           {/* Messages */}
@@ -285,7 +367,10 @@ export default function ChapterPage() {
                   className={styles.chatOpenerImg}
                   style={{ backgroundImage: `url(${bannerImage})` }}
                 />
-                <p>You're matched. No intro needed — you just read the same chapter.</p>
+                <p>
+                  You're matched. No intro needed — you just read the same
+                  chapter.
+                </p>
               </div>
             )}
 
@@ -308,9 +393,15 @@ export default function ChapterPage() {
             <input
               className={styles.chatInput}
               value={inputText}
-              onChange={e => setInputText(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter') handleSend(); }}
-              placeholder={chatUnlocked ? 'say something...' : `chat opens in ${revealCountdown}s`}
+              onChange={(e) => setInputText(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleSend();
+              }}
+              placeholder={
+                chatUnlocked
+                  ? "say something..."
+                  : `chat opens in ${revealCountdown}s`
+              }
               disabled={!chatUnlocked}
               autoFocus={chatUnlocked}
             />
@@ -328,35 +419,134 @@ export default function ChapterPage() {
   }
 
   // ── RENDER: SESSION ENDED ────────────────
-  if (status === 'ended') {
+  // ── RENDER: SESSION ENDED ────────────────
+  if (status === "ended") {
+    const sessionDuration = match
+      ? Math.floor((Date.now() - (match.matchedAt || Date.now())) / 1000)
+      : 0;
+    const minutes = Math.floor(sessionDuration / 60);
+    const seconds = sessionDuration % 60;
+    const durationStr = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+
+    const tasteUpdates = [
+      {
+        title: chapter.title,
+        tag: chapter.genres[0],
+        delta: "+12 pts",
+        up: true,
+      },
+      {
+        title: chapter.genres[1] || "action manga",
+        tag: "genre",
+        delta: "+4 pts",
+        up: true,
+      },
+      {
+        title: "tactical narratives",
+        tag: "new tag",
+        delta: "new tag",
+        up: true,
+      },
+    ];
+
     return (
-      <div className={styles.endedPage}>
-        <div className={styles.endedCard}>
-          <div className={styles.endedIcon}>
-            {endReason === 'skip' ? '→' : endReason === 'partner_skipped' ? '👋' : '✦'}
+      <div className={styles.postPage}>
+        <div className={styles.postCard}>
+          {/* Header */}
+          <div className={styles.postHeader}>
+            <div className={styles.postHeaderBadge}>SESSION COMPLETE</div>
+            <h1 className={styles.postHeadline}>
+              {endReason === "partner_skipped"
+                ? "They moved on."
+                : "Good conversation."}
+            </h1>
+            <p className={styles.postSub}>
+              Your taste profile has been updated based on this match.
+            </p>
           </div>
-          <h2>
-            {endReason === 'skip' ? 'You skipped'
-              : endReason === 'partner_skipped' ? 'They moved on'
-              : 'Session ended'}
-          </h2>
-          <p>
-            {endReason === 'partner_skipped'
-              ? "They left the conversation. You can find another match."
-              : "Jump back in and find another match."}
-          </p>
-          <button
-            className={styles.endedBtn}
-            onClick={() => {
-              setQueueEnabled(false);
-              setTimeout(() => setQueueEnabled(true), 100);
-            }}
-          >
-            find another match
-          </button>
-          <button className={styles.endedBtnGhost} onClick={() => router.push('/')}>
-            back to home
-          </button>
+
+          {/* Session pill */}
+          <div className={styles.postSessionPill}>
+            <span className={styles.postLiveDot} />
+            {minutes > 0 ? durationStr : "quick match"} · {chapter.title} Ch.
+            {chapter.chapter}
+          </div>
+
+          {/* Stats row */}
+          <div className={styles.postStatsRow}>
+            <div className={styles.postStat}>
+              <span className={styles.postStatValue}>
+                {minutes > 0 ? durationStr : "< 1m"}
+              </span>
+              <span className={styles.postStatLabel}>DURATION</span>
+            </div>
+            <div className={styles.postStatDivider} />
+            <div className={styles.postStat}>
+              <span className={styles.postStatValue}>
+                {match?.similarity ?? 0}%
+              </span>
+              <span className={styles.postStatLabel}>TASTE MATCH</span>
+            </div>
+            <div className={styles.postStatDivider} />
+            <div className={styles.postStat}>
+              <span className={styles.postStatValue}>1st</span>
+              <span className={styles.postStatLabel}>SESSION TODAY</span>
+            </div>
+          </div>
+
+          {/* Taste profile updated */}
+          <div className={styles.postProfileSection}>
+            <div className={styles.postProfileHeader}>
+              <span className={styles.postProfileLabel}>
+                YOUR TASTE PROFILE · UPDATED
+              </span>
+            </div>
+            <div className={styles.postProfileList}>
+              {tasteUpdates.map((item, i) => (
+                <div key={i} className={styles.postProfileRow}>
+                  <div className={styles.postProfileLeft}>
+                    <div
+                      className={styles.postProfileDot}
+                      style={{
+                        background:
+                          i === 0 ? "#6366f1" : i === 1 ? "#ec4899" : "#34d399",
+                      }}
+                    />
+                    <div>
+                      <div className={styles.postProfileTitle}>
+                        {item.title}
+                      </div>
+                      <div className={styles.postProfileTag}>{item.tag}</div>
+                    </div>
+                  </div>
+                  <div
+                    className={`${styles.postProfileDelta} ${item.up ? styles.deltaUp : styles.deltaDown}`}
+                  >
+                    ↑ {item.delta}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* CTAs */}
+          <div className={styles.postCtas}>
+            <button
+              className={styles.postCtaPrimary}
+              onClick={() => {
+                setQueueEnabled(false);
+                setTimeout(() => setQueueEnabled(true), 100);
+              }}
+            >
+              read another →
+            </button>
+            <button
+              className={styles.postCtaGhost}
+              onClick={() => router.push("/")}
+            >
+              back to home
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -365,35 +555,53 @@ export default function ChapterPage() {
   // ── RENDER: CHAPTER LANDING PAGE ────────
   return (
     <main className={styles.page}>
-
       {/* Banner */}
       <div className={styles.banner}>
-        <div className={styles.bannerImg} style={{ backgroundImage: `url(${bannerImage})` }} />
+        <div
+          className={styles.bannerImg}
+          style={{ backgroundImage: `url(${bannerImage})` }}
+        />
         <div className={styles.bannerOverlay} />
         <nav className={styles.topBar}>
-          <button className={styles.backBtn} onClick={() => router.push('/')}>← back</button>
-          <div className={styles.kzLogo}><span>絆</span> kizuna</div>
+          <button className={styles.backBtn} onClick={() => router.push("/")}>
+            ← back
+          </button>
+          <div className={styles.kzLogo}>
+            <span>絆</span> kizuna
+          </div>
         </nav>
         <div className={styles.bannerContent}>
           <div className={styles.tagRow}>
-            <span className={styles.tag}>{chapter.type} · {chapter.genres[0]}</span>
+            <span className={styles.tag}>
+              {chapter.type} · {chapter.genres[0]}
+            </span>
             <span className={styles.droppedPill}>
               <span className={styles.liveDot} />
               DROPPED {chapter.droppedMinutesAgo} MIN AGO
             </span>
           </div>
           <h1 className={styles.title}>{chapter.title}</h1>
-          <p className={styles.chapterMeta}>Chapter {chapter.chapter} · {dateStr}</p>
+          <p className={styles.chapterMeta}>
+            Chapter {chapter.chapter} · {dateStr}
+          </p>
         </div>
       </div>
 
       {/* Stats */}
       <div className={styles.statsRow}>
         <div className={styles.statCard}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
           </svg>
           <div>
             <span className={styles.statLabel}>IN QUEUE</span>
@@ -401,8 +609,16 @@ export default function ChapterPage() {
           </div>
         </div>
         <div className={styles.statCard}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
           </svg>
           <div>
             <span className={styles.statLabel}>AVG WAIT</span>
@@ -410,13 +626,22 @@ export default function ChapterPage() {
           </div>
         </div>
         <div className={styles.statCard}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
-            <polyline points="17 6 23 6 23 12"/>
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          >
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+            <polyline points="17 6 23 6 23 12" />
           </svg>
           <div>
             <span className={styles.statLabel}>PEAK WINDOW</span>
-            <span className={styles.statValue}>{chapter.peakMinutesLeft} min left</span>
+            <span className={styles.statValue}>
+              {chapter.peakMinutesLeft} min left
+            </span>
           </div>
         </div>
       </div>
@@ -426,35 +651,54 @@ export default function ChapterPage() {
         <div className={styles.queueTop}>
           <span className={styles.queueLabel}>READERS IN QUEUE</span>
           <span className={styles.queueCount}>{readers}</span>
-          <span className={styles.queueSub}>people waiting to talk about this chapter</span>
+          <span className={styles.queueSub}>
+            people waiting to talk about this chapter
+          </span>
         </div>
 
         <div className={styles.queueAvatarRow}>
           <div className={styles.queueAvatars}>
             {avatarImages.slice(0, 3).map((src, i) => (
-              <span key={i} className={styles.queueAvatar} style={{ backgroundImage: `url(${src})` }} />
+              <span
+                key={i}
+                className={styles.queueAvatar}
+                style={{ backgroundImage: `url(${src})` }}
+              />
             ))}
-            <span className={styles.queueAvatarMore}>+{Math.max(0, readers - 3)}</span>
+            <span className={styles.queueAvatarMore}>
+              +{Math.max(0, readers - 3)}
+            </span>
           </div>
           <span className={styles.queueNames}>
-            {chapter.readerNames.join(', ')} and {Math.max(0, readers - chapter.readerNames.length)} others<br />
+            {chapter.readerNames.join(", ")} and{" "}
+            {Math.max(0, readers - chapter.readerNames.length)} others
+            <br />
             <span>are waiting for a match right now</span>
           </span>
         </div>
 
         <div className={styles.activityRow}>
           <span className={styles.activityLabel}>QUEUE ACTIVITY</span>
-          <span className={styles.activityLevel}>{chapter.activityLevel} right now</span>
+          <span className={styles.activityLevel}>
+            {chapter.activityLevel} right now
+          </span>
         </div>
         <div className={styles.activityBar}>
-          <div className={styles.activityFill} style={{ width: activityWidth }} />
+          <div
+            className={styles.activityFill}
+            style={{ width: activityWidth }}
+          />
         </div>
 
         {/* CTAs */}
         <div className={styles.ctaStack}>
-          {status === 'idle' && (
+          {status === "idle" && (
             <>
-              <button className={styles.ctaPrimary} onClick={handleJoinQueue} disabled={!authReady}>
+              <button
+                className={styles.ctaPrimary}
+                onClick={handleJoinQueue}
+                disabled={!authReady}
+              >
                 <span>✦</span> I just read it — find my match
               </button>
               <button className={styles.ctaSecondary}>
@@ -463,21 +707,26 @@ export default function ChapterPage() {
             </>
           )}
 
-          {(status === 'joining' || status === 'queued') && (
+          {(status === "joining" || status === "queued") && (
             <div className={styles.inQueueState}>
               <div className={styles.queueSpinner} />
               <div>
                 <strong>Finding your match...</strong>
                 <span>Matched by chapter timing and taste overlap</span>
               </div>
-              <button className={styles.leaveQueue} onClick={() => { leaveQueue(); setQueueEnabled(false); }}>
+              <button
+                className={styles.leaveQueue}
+                onClick={() => {
+                  leaveQueue();
+                  setQueueEnabled(false);
+                }}
+              >
                 leave queue
               </button>
             </div>
           )}
         </div>
       </div>
-
     </main>
   );
 }

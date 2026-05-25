@@ -11,7 +11,9 @@ export type QueueStatus =
 export interface MatchPayload {
   sessionId: string;
   chapterId: string;
-  similarity: number;   // 0-100
+  similarity: number;  
+    matchedAt?: number;  // add this
+ // 0-100
 }
 
 export interface ChatMessage {
@@ -61,12 +63,11 @@ export function useQueue({ userId, chapterId, titleIds, enabled }: UseQueueOptio
       setQueueDepth(depth);
     });
 
-    socket.on('match:found', (payload: MatchPayload) => {
-      console.log('[socket] matched!', payload);
-      setMatch(payload);
-      setStatus('matched');
-    });
-
+socket.on('match:found', (payload: MatchPayload) => {
+  console.log('[socket] matched!', payload);
+  setMatch({ ...payload, matchedAt: Date.now() });
+  setStatus('matched');
+});
     socket.on('chat:message', (msg: ChatMessage) => {
       setMessages(prev => [...prev, msg]);
     });
@@ -120,5 +121,6 @@ export function useQueue({ userId, chapterId, titleIds, enabled }: UseQueueOptio
     sendMessage,
     skip,
     leaveQueue,
+    
   };
 }

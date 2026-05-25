@@ -149,3 +149,42 @@
   .topBar { padding: 16px; }
   .bannerContent { left: 16px; right: 16px; bottom: 24px; }
 }
+/* ═══════════════════════════════════════════
+   POST SESSION
+═══════════════════════════════════════════ */
+.postPage { min-height: 100dvh; background: #0a0a0f; display: flex; align-items: center; justify-content: center; padding: 24px; font-family: 'DM Sans', sans-serif; }
+.postCard { max-width: 400px; width: 100%; display: flex; flex-direction: column; gap: 20px; }
+
+.postHeader { display: flex; flex-direction: column; gap: 8px; }
+.postHeaderBadge { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; color: rgba(255,255,255,0.3); text-transform: uppercase; }
+.postHeadline { font-size: clamp(32px, 8vw, 48px); font-weight: 900; color: #fff; margin: 0; letter-spacing: -0.03em; line-height: 1.05; }
+.postSub { font-size: 13px; color: rgba(255,255,255,0.35); margin: 0; line-height: 1.6; }
+
+.postSessionPill { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 6px 14px; font-size: 12px; color: rgba(255,255,255,0.5); width: fit-content; }
+.postLiveDot { width: 6px; height: 6px; background: #34d399; border-radius: 50%; flex-shrink: 0; }
+
+.postStatsRow { display: flex; align-items: center; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; }
+.postStat { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.postStatValue { font-size: 24px; font-weight: 800; color: #fff; letter-spacing: -0.03em; }
+.postStatLabel { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; color: rgba(255,255,255,0.3); text-transform: uppercase; }
+.postStatDivider { width: 1px; height: 36px; background: rgba(255,255,255,0.08); }
+
+.postProfileSection { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; overflow: hidden; }
+.postProfileHeader { padding: 14px 18px 10px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.postProfileLabel { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; color: rgba(255,255,255,0.3); text-transform: uppercase; }
+.postProfileList { display: flex; flex-direction: column; }
+.postProfileRow { display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.postProfileRow:last-child { border-bottom: none; }
+.postProfileLeft { display: flex; align-items: center; gap: 12px; }
+.postProfileDot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.postProfileTitle { font-size: 13px; font-weight: 600; color: #e8e8f0; }
+.postProfileTag { font-size: 11px; color: rgba(255,255,255,0.3); }
+.postProfileDelta { font-size: 12px; font-weight: 700; }
+.deltaUp { color: #34d399; }
+.deltaDown { color: rgba(255,255,255,0.25); }
+
+.postCtas { display: flex; flex-direction: column; gap: 10px; }
+.postCtaPrimary { width: 100%; padding: 17px; background: #fff; color: #0a0a0f; border: none; border-radius: 14px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: -0.01em; transition: opacity 0.15s; }
+.postCtaPrimary:hover { opacity: 0.88; }
+.postCtaGhost { background: none; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); padding: 13px; border-radius: 14px; font-size: 14px; cursor: pointer; font-family: inherit; width: 100%; transition: all 0.15s; }
+.postCtaGhost:hover { border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); }

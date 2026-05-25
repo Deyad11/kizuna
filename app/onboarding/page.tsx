@@ -5,9 +5,8 @@ import styles from "./oboarding.module.css";
 import { getTrendingTitles } from "@/lib/anilist";
 import { createClient } from "@/lib/supabase/client"; // ✅ SSR browser client
 
-
 export default function Onboarding() {
-    const supabase = createClient();
+  const supabase = createClient();
   const [titles, setTitles] = useState<any[]>([]);
   const [selected, setSelected] = useState<number[]>([]);
   const [activeFilter, setActiveFilter] = useState("all");
@@ -38,23 +37,34 @@ export default function Onboarding() {
       : titles.filter((x) => x.type === activeFilter);
 
   const canContinue = selected.length >= 3;
-
   const handleContinue = async () => {
     console.log("STARTED HANDLE");
 
     try {
-     const {
-  data: { user },
-  error: userError,
-} = await supabase.auth.getUser();
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
 
-    if (userError || !user) {
-  console.log("NO USER FOUND", userError);
-  return;
-}
+      if (userError || !user) {
+        console.log("NO USER FOUND", userError);
+        return;
+      }
 
       console.log("USER:", user);
 
+      const { error: profileError } = await supabase.from("profiles").upsert({
+        id: user.id,
+        username: user.user_metadata.full_name,
+        avatar_url: user.user_metadata.avatar_url,
+        onboarding_complete: true,
+      });
+
+      console.log("PROFILE ERROR:", profileError);
+
+      if (profileError) return;
+
+      // ✅ THEN INSERT INTERESTS
       const interests = selected.map((titleId) => ({
         user_id: user.id,
         title_id: titleId,
@@ -62,10 +72,7 @@ export default function Onboarding() {
 
       console.log("INTERESTS TO INSERT:", interests);
 
-      const {
-        data: insertedData,
-        error: interestError,
-      } = await supabase
+      const { data: insertedData, error: interestError } = await supabase
         .from("user_interests")
         .insert(interests)
         .select();
@@ -74,18 +81,6 @@ export default function Onboarding() {
       console.log("INTEREST ERROR:", interestError);
 
       if (interestError) return;
-
-     const { error: profileError } = await supabase
-  .from("profiles")
-  .upsert({
-    id: user.id,
-    onboarding_complete: true,
-  });
-        
-
-      console.log("PROFILE ERROR:", profileError);
-
-      if (profileError) return;
 
       console.log("REDIRECTING");
 
@@ -137,25 +132,15 @@ export default function Onboarding() {
               >
                 <div className={styles.obTileOverlay} />
 
-                <span className={styles.obBadge}>
-                  {item.badge}
-                </span>
+                <span className={styles.obBadge}>{item.badge}</span>
 
-                {isSelected && (
-                  <div className={styles.obCheck}>
-                    ✓
-                  </div>
-                )}
+                {isSelected && <div className={styles.obCheck}>✓</div>}
               </div>
 
               <div className={styles.obTileBottom}>
-                <div className={styles.obTitle}>
-                  {item.name}
-                </div>
+                <div className={styles.obTitle}>{item.name}</div>
 
-                <div className={styles.obType}>
-                  {item.type}
-                </div>
+                <div className={styles.obType}>{item.type}</div>
               </div>
             </div>
           );
