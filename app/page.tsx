@@ -1,20 +1,19 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import type { User } from '@supabase/supabase-js';
-import styles from '../styles/landing.module.css';
-import SignInButton from '@/components/SignInButton';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import type { User } from "@supabase/supabase-js";
+import styles from "../styles/landing.module.css";
+import SignInButton from "@/components/SignInButton";
 
-import { createClient } from '@/lib/supabase/client';
-
+import { createClient } from "@/lib/supabase/client";
 
 interface ChapterDrop {
   id: string;
   title: string;
   searchTitle: string;
   chapter: number;
-  type: 'manga' | 'webtoon';
+  type: "manga" | "webtoon";
   readers: number;
   coverImage: string;
   bannerImage?: string;
@@ -22,11 +21,11 @@ interface ChapterDrop {
 }
 
 const avatarImages = [
-  'https://s4.anilist.co/file/anilistcdn/character/large/b73935-GG1P3VnXjrGz.png',
-  'https://s4.anilist.co/file/anilistcdn/character/large/b40882-ZOC6vPpaG4D8.png',
-  'https://s4.anilist.co/file/anilistcdn/character/large/b127691-gW8Ljg8RFLgc.png',
-  'https://s4.anilist.co/file/anilistcdn/character/large/b40-JOxFpswA5N0r.png',
-  'https://s4.anilist.co/file/anilistcdn/character/large/b146033-kV3dy7GM2rTQ.png',
+  "https://s4.anilist.co/file/anilistcdn/character/large/b73935-GG1P3VnXjrGz.png",
+  "https://s4.anilist.co/file/anilistcdn/character/large/b40882-ZOC6vPpaG4D8.png",
+  "https://s4.anilist.co/file/anilistcdn/character/large/b127691-gW8Ljg8RFLgc.png",
+  "https://s4.anilist.co/file/anilistcdn/character/large/b40-JOxFpswA5N0r.png",
+  "https://s4.anilist.co/file/anilistcdn/character/large/b146033-kV3dy7GM2rTQ.png",
 ];
 
 const ANILIST_QUERY = `
@@ -50,9 +49,9 @@ const ANILIST_QUERY = `
 
 async function fetchAniListArtwork(drop: ChapterDrop): Promise<ChapterDrop> {
   try {
-    const response = await fetch('https://graphql.anilist.co', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    const response = await fetch("https://graphql.anilist.co", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query: ANILIST_QUERY,
         variables: { search: drop.searchTitle },
@@ -66,7 +65,10 @@ async function fetchAniListArtwork(drop: ChapterDrop): Promise<ChapterDrop> {
 
     return {
       ...drop,
-      coverImage: media?.coverImage?.extraLarge || media?.coverImage?.large || drop.coverImage,
+      coverImage:
+        media?.coverImage?.extraLarge ||
+        media?.coverImage?.large ||
+        drop.coverImage,
       bannerImage: media?.bannerImage || drop.bannerImage,
     };
   } catch {
@@ -76,50 +78,55 @@ async function fetchAniListArtwork(drop: ChapterDrop): Promise<ChapterDrop> {
 
 const fallbackChapterDrops: ChapterDrop[] = [
   {
-    id: 'blue-lock',
-    title: 'Blue Lock',
-    searchTitle: 'Blue Lock',
-    chapter: 247,
-    type: 'manga',
+    id: "blue-lock",
+    title: "Blue Lock",
+    searchTitle: "Blue Lock",
+    chapter: 346,
+    type: "manga",
     readers: 18,
-    coverImage: 'https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx114745-yvD3e9G3FruQ.jpg',
+    coverImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx114745-yvD3e9G3FruQ.jpg",
   },
   {
-    id: 'jujutsu-kaisen',
-    title: 'Jujutsu Kaisen',
-    searchTitle: 'Jujutsu Kaisen',
-    chapter: 268,
-    type: 'manga',
+    id: "jujutsu-kaisen",
+    title: "Jujutsu Kaisen",
+    searchTitle: "Jujutsu Kaisen",
+    chapter: 271,
+    type: "manga",
     readers: 67,
-    coverImage: 'https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx101517-L2DF9rL0SkVl.jpg',
+    coverImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx101517-L2DF9rL0SkVl.jpg",
   },
   {
-    id: 'one-piece',
-    title: 'One Piece',
-    searchTitle: 'One Piece',
-    chapter: 1118,
-    type: 'manga',
+    id: "one-piece",
+    title: "One Piece",
+    searchTitle: "One Piece",
+    chapter: 1183,
+    type: "manga",
     readers: 27,
-    coverImage: 'https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx30013-RKhL3jK5TTVM.jpg',
+    coverImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx30013-RKhL3jK5TTVM.jpg",
   },
   {
-    id: 'tower-of-god',
-    title: 'Tower of God',
-    searchTitle: 'Tower of God',
-    chapter: 630,
-    type: 'webtoon',
+    id: "tower-of-god",
+    title: "Tower of God",
+    searchTitle: "Tower of God",
+    chapter: 625,
+    type: "webtoon",
     readers: 44,
-    coverImage: 'https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx85143-8bztHkqSSB4m.jpg',
+    coverImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx85143-8bztHkqSSB4m.jpg",
   },
   {
-    id: 'dandadan',
-    title: 'Dandadan',
-    searchTitle: 'Dandadan',
-    chapter: 142,
-    type: 'manga',
+    id: "dandadan",
+    title: "Dandadan",
+    searchTitle: "Dandadan",
+    chapter: 234,
+    type: "manga",
     readers: 70,
-    quote: 'that ending was insane',
-    coverImage: 'https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx132029-mAXeRZn5V6Rg.jpg',
+    quote: "that ending was insane",
+    coverImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx132029-mAXeRZn5V6Rg.jpg",
   },
 ];
 
@@ -129,8 +136,13 @@ export default function Home() {
   const [liveIndex, setLiveIndex] = useState(fallbackChapterDrops.length - 1);
   const [user, setUser] = useState<User | null>(null);
   const liveDrop = chapterDrops[liveIndex] || chapterDrops[0];
-  const blueLockDrop = chapterDrops.find((drop) => drop.id === 'blue-lock') || chapterDrops[0];
-  const previewDrops = [chapterDrops[4] || chapterDrops[0], chapterDrops[1] || chapterDrops[0], chapterDrops[0]];
+  const blueLockDrop =
+    chapterDrops.find((drop) => drop.id === "blue-lock") || chapterDrops[0];
+  const previewDrops = [
+    chapterDrops[4] || chapterDrops[0],
+    chapterDrops[1] || chapterDrops[0],
+    chapterDrops[0],
+  ];
 
   useEffect(() => {
     const supabase = createClient();
@@ -156,7 +168,9 @@ export default function Home() {
     let mounted = true;
 
     const loadArtwork = async () => {
-      const dropsWithArtwork = await Promise.all(fallbackChapterDrops.map(fetchAniListArtwork));
+      const dropsWithArtwork = await Promise.all(
+        fallbackChapterDrops.map(fetchAniListArtwork),
+      );
       if (mounted) setChapterDrops(dropsWithArtwork);
     };
 
@@ -181,21 +195,30 @@ export default function Home() {
     router.push(`/chapter/${id}`);
   };
 
-  const profileImage = user?.user_metadata?.avatar_url || user?.user_metadata?.picture;
-  const profileName = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email || 'Profile';
+  const profileImage =
+    user?.user_metadata?.avatar_url || user?.user_metadata?.picture;
+  const profileName =
+    user?.user_metadata?.full_name ||
+    user?.user_metadata?.name ||
+    user?.email ||
+    "Profile";
   const profileInitial = profileName.charAt(0).toUpperCase();
 
   return (
     <main className={styles.kz}>
       <nav className={styles.kzNav} aria-label="Main navigation">
-        <button className={styles.kzLogo} onClick={() => router.push('/')} aria-label="Kizuna home">
+        <button
+          className={styles.kzLogo}
+          onClick={() => router.push("/")}
+          aria-label="Kizuna home"
+        >
           <span className={styles.kzLogoMark}>絆</span>
           <span className={styles.kzLogoText}>kizuna</span>
         </button>
 
         <div className={styles.kzNavMid}>
           <button className={styles.kzNavActive}>live now</button>
-          <button onClick={() => router.push('/releases')}>calendar</button>
+          <button onClick={() => router.push("/releases")}>calendar</button>
           <button>how it works</button>
           <button>about</button>
         </div>
@@ -203,10 +226,16 @@ export default function Home() {
         <div className={styles.kzNavRight}>
           {user ? (
             <>
-              <button className={styles.kzBtnSolid} onClick={() => openChapter(liveDrop.id)}>
+              <button
+                className={styles.kzBtnSolid}
+                onClick={() => openChapter(liveDrop.id)}
+              >
                 jump into a chapter <span aria-hidden></span>
               </button>
-              <button className={styles.kzProfileButton} aria-label={`Open ${profileName} profile`}>
+              <button
+                className={styles.kzProfileButton}
+                aria-label={`Open ${profileName} profile`}
+              >
                 {profileImage ? (
                   <span style={{ backgroundImage: `url(${profileImage})` }} />
                 ) : (
@@ -217,7 +246,10 @@ export default function Home() {
           ) : (
             <>
               <SignInButton className={styles.kzBtnGhost} text="log in" />
-              <SignInButton className={styles.kzBtnSolid} text="jump into a chapter" />
+              <SignInButton
+                className={styles.kzBtnSolid}
+                text="jump into a chapter"
+              />
             </>
           )}
         </div>
@@ -225,7 +257,10 @@ export default function Home() {
 
       <section className={styles.kzHeroWrap}>
         <div className={styles.kzHeroLeft}>
-          <button className={styles.kzLivePill} onClick={() => openChapter(liveDrop.id)}>
+          <button
+            className={styles.kzLivePill}
+            onClick={() => openChapter(liveDrop.id)}
+          >
             <span className={styles.kzLiveDotPulse} aria-hidden />
             <span>LIVE NOW</span>
             <span aria-hidden>·</span>
@@ -251,14 +286,21 @@ export default function Home() {
           </h1>
 
           <p className={styles.kzHeroSub}>
-            Right after a chapter drops, Kizuna finds someone who just experienced the same thing.
+            Right after a chapter drops, Kizuna finds someone who just
+            experienced the same thing.
           </p>
 
           <div className={styles.kzHeroActions}>
-            <button className={styles.kzBtnPrimary} onClick={() => openChapter(liveDrop.id)}>
+            <button
+              className={styles.kzBtnPrimary}
+              onClick={() => openChapter(liveDrop.id)}
+            >
               jump into a chapter <span aria-hidden></span>
             </button>
-            <button className={styles.kzBtnText} onClick={() => router.push('/releases')}>
+            <button
+              className={styles.kzBtnText}
+              onClick={() => router.push("/releases")}
+            >
               see what&apos;s dropping today <span aria-hidden></span>
             </button>
           </div>
@@ -267,7 +309,9 @@ export default function Home() {
         <article className={styles.kzMomentPanel}>
           <div
             className={styles.kzMomentBg}
-            style={{ backgroundImage: `url(${liveDrop.bannerImage || liveDrop.coverImage})` }}
+            style={{
+              backgroundImage: `url(${liveDrop.bannerImage || liveDrop.coverImage})`,
+            }}
           />
           <div className={styles.kzMomentOverlay} />
           <div className={styles.kzMomentContent}>
@@ -294,7 +338,9 @@ export default function Home() {
               {liveDrop.readers} people just read it
             </div>
 
-            <p className={styles.kzMomentQuote}>&ldquo;{liveDrop.quote || 'nah that panel was wild'}&rdquo;</p>
+            <p className={styles.kzMomentQuote}>
+              &ldquo;{liveDrop.quote || "nah that panel was wild"}&rdquo;
+            </p>
 
             <button
               className={styles.kzMomentBtn}
@@ -314,19 +360,31 @@ export default function Home() {
             <h2>Dropping today</h2>
             <p>Catch the chapters everyone&apos;s reacting to.</p>
           </div>
-          <button className={styles.kzSeeAll} onClick={() => router.push('/releases')}>
+          <button
+            className={styles.kzSeeAll}
+            onClick={() => router.push("/releases")}
+          >
             see full calendar <span aria-hidden></span>
           </button>
         </div>
 
         <div className={styles.kzScrollRow}>
           {chapterDrops.map((drop, index) => (
-            <button key={drop.id} className={styles.kzCard} onClick={() => openChapter(drop.id)}>
-              <span className={styles.kzCardArt} style={{ backgroundImage: `url(${drop.coverImage})` }}>
+            <button
+              key={drop.id}
+              className={styles.kzCard}
+              onClick={() => openChapter(drop.id)}
+            >
+              <span
+                className={styles.kzCardArt}
+                style={{ backgroundImage: `url(${drop.coverImage})` }}
+              >
                 <span className={styles.kzCardArtOverlay} />
                 <span className={styles.kzCardArtBadge}>{drop.type}</span>
                 <span className={styles.kzCardName}>{drop.title}</span>
-                <span className={styles.kzCardChapLabel}>ch.{drop.chapter}</span>
+                <span className={styles.kzCardChapLabel}>
+                  ch.{drop.chapter}
+                </span>
               </span>
               <span className={styles.kzCardMeta}>
                 <span>
@@ -334,19 +392,24 @@ export default function Home() {
                   {drop.readers} reading now
                 </span>
                 <span className={styles.kzCardAvatars} aria-hidden>
-                  {avatarImages.slice(index % 2, index % 2 + 3).map((avatar) => (
-                    <span
-                      key={`${drop.id}-${avatar}`}
-                      className={styles.kzCardAvatar}
-                      style={{ backgroundImage: `url(${avatar})` }}
-                    />
-                  ))}
+                  {avatarImages
+                    .slice(index % 2, (index % 2) + 3)
+                    .map((avatar) => (
+                      <span
+                        key={`${drop.id}-${avatar}`}
+                        className={styles.kzCardAvatar}
+                        style={{ backgroundImage: `url(${avatar})` }}
+                      />
+                    ))}
                 </span>
               </span>
             </button>
           ))}
 
-          <button className={styles.kzMoreCard} onClick={() => router.push('/releases')}>
+          <button
+            className={styles.kzMoreCard}
+            onClick={() => router.push("/releases")}
+          >
             <strong>+12</strong>
             <span>more chapters</span>
             <small>see calendar →</small>
@@ -355,186 +418,112 @@ export default function Home() {
       </section>
 
       <section className={styles.kzHow}>
-  <div className={styles.kzHowHeader}>
-    <div>
-      <h2>How Kizuna works</h2>
-      <p>
-        Real-time reactions, matched around the exact chapter moment.
-      </p>
-    </div>
+        <div className={styles.kzHowHeader}>
+          <div>
+            <h2>How Kizuna works</h2>
+            <p>Real-time reactions, matched around the exact chapter moment.</p>
+          </div>
 
-    <button className={styles.kzHowCta}>
-      TRY IT LIVE
-    </button>
-  </div>
+          <button className={styles.kzHowCta}>TRY IT LIVE</button>
+        </div>
 
-  <div className={styles.kzWorksGrid}>
+        <div className={styles.kzWorksGrid}>
+          {/* CARD 1 */}
 
-    {/* CARD 1 */}
+          <article className={styles.kzWorkCard}>
+            <div className={styles.kzWorkNum}>01</div>
 
-    <article className={styles.kzWorkCard}>
+            <h3>Pick a live drop</h3>
 
-      <div className={styles.kzWorkNum}>
-        01
-      </div>
+            <p>Choose a chapter that just dropped or is trending right now.</p>
 
-      <h3>Pick a live drop</h3>
+            <div className={styles.kzMiniDropPanel}>
+              {previewDrops.map((drop) => (
+                <div key={drop.id} className={styles.kzMiniDrop}>
+                  <span
+                    style={{
+                      backgroundImage: `url(${drop.coverImage})`,
+                    }}
+                  />
 
-      <p>
-        Choose a chapter that just dropped or is trending right now.
-      </p>
+                  <div>
+                    <strong>{drop.title}</strong>
 
-      <div className={styles.kzMiniDropPanel}>
+                    <small>{drop.readers} reading now</small>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </article>
 
-        {previewDrops.map((drop)=>(
-          <div
-            key={drop.id}
-            className={styles.kzMiniDrop}
-          >
+          {/* CARD 2 */}
 
-            <span
-              style={{
-                backgroundImage:`url(${drop.coverImage})`
-              }}
-            />
+          <article className={styles.kzWorkCard}>
+            <div className={styles.kzWorkNum}>02</div>
 
-            <div>
+            <h3>We find your match</h3>
 
-              <strong>
-                {drop.title}
-              </strong>
+            <p>We match you with someone reading the same chapter.</p>
 
-              <small>
-                {drop.readers} reading now
-              </small>
+            <div className={styles.kzWorkMatch}>
+              <span style={{ backgroundImage: "url('/bluelock.png')" }} />
 
+              <i>⇄</i>
+
+              <span style={{ backgroundImage: "url('/denji.png')" }} />
             </div>
 
-          </div>
-        ))}
+            <div className={styles.kzFindingCard}>
+              <strong>Finding someone...</strong>
 
-      </div>
+              <small>Matched by chapter timing and taste overlap</small>
+            </div>
+          </article>
 
-    </article>
+          {/* CARD 3 */}
 
+          <article className={styles.kzWorkCard}>
+            <div className={styles.kzWorkNum}>03</div>
 
-    {/* CARD 2 */}
+            <h3>Land on the same scene</h3>
 
-    <article className={styles.kzWorkCard}>
+            <p>You both land on the exact moment that sparked the reaction.</p>
 
-      <div className={styles.kzWorkNum}>
-        02
-      </div>
+            <div
+              className={styles.kzWorkScene}
+              style={{
+                backgroundImage: `url(${blueLockDrop.bannerImage || blueLockDrop.coverImage})`,
+              }}
+            >
+              <span>{/* NAH THAT CURVE SHOT... */}</span>
+            </div>
+          </article>
 
-      <h3>
-        We find your match
-      </h3>
+          {/* CARD 4 */}
 
-      <p>
-        We match you with someone reading the same chapter.
-      </p>
+          <article className={styles.kzWorkCard}>
+            <div className={styles.kzWorkNum}>04</div>
 
-      <div className={styles.kzWorkMatch}>
+            <h3>Chat with real reactions</h3>
 
-        <span
-          style={{backgroundImage:"url('/bluelock.png')"}}
-        />
+            <p>No awkward intros. Just real reactions.</p>
 
-       <i>⇄</i>
+            <div className={styles.kzWorkChat}>
+              <div className={styles.kzWorkBubblePrimary}>
+                NAH THAT CURVE SHOT WAS INSANE
+              </div>
 
-        <span
-          style={{backgroundImage:"url('/denji.png')"}}
-        />
+              <div className={styles.kzWorkBubbleSecondary}>
+                I LOST IT BROOO
+              </div>
 
-      </div>
-
-
-      <div className={styles.kzFindingCard}>
-
-        <strong>
-          Finding someone...
-        </strong>
-
-        <small>
-          Matched by chapter timing and taste overlap
-        </small>
-
-      </div>
-
-    </article>
-
-
-    {/* CARD 3 */}
-
-    <article className={styles.kzWorkCard}>
-
-      <div className={styles.kzWorkNum}>
-        03
-      </div>
-
-      <h3>
-        Land on the same scene
-      </h3>
-
-      <p>
-        You both land on the exact moment that sparked the reaction.
-      </p>
-
-      <div
-        className={styles.kzWorkScene}
-        style={{
-          backgroundImage:
-          `url(${blueLockDrop.bannerImage || blueLockDrop.coverImage})`
-        }}
-      >
-
-      <span>
-      {/* NAH THAT CURVE SHOT... */}
-      </span>
-
-      </div>
-
-    </article>
-
-
-    {/* CARD 4 */}
-
-    <article className={styles.kzWorkCard}>
-
-      <div className={styles.kzWorkNum}>
-        04
-      </div>
-
-      <h3>
-        Chat with real reactions
-      </h3>
-
-      <p>
-        No awkward intros. Just real reactions.
-      </p>
-
-
-      <div className={styles.kzWorkChat}>
-
-        <div className={styles.kzWorkBubblePrimary}>
-          NAH THAT CURVE SHOT
-          WAS INSANE
+              <div className={styles.kzWorkBubblePrimary}>
+                WAIT DID YOU CATCH THAT?
+              </div>
+            </div>
+          </article>
         </div>
-
-        <div className={styles.kzWorkBubbleSecondary}>
-          I LOST IT BROOO
-        </div>
-
-        <div className={styles.kzWorkBubblePrimary}>
-          WAIT DID YOU CATCH THAT?
-        </div>
-
-      </div>
-
-    </article>
-
-  </div>
-</section>
+      </section>
       <footer className={styles.kzFinal}>
         <div>
           <span className={styles.kzFinalEyebrow}>live after every drop</span>
@@ -551,7 +540,11 @@ export default function Home() {
             <b>↯</b> queues open in 15 minutes
           </span>
         </div>
-        <button className={styles.kzFinalButton} onClick={() => openChapter(liveDrop.id)} aria-label="Jump into a chapter">
+        <button
+          className={styles.kzFinalButton}
+          onClick={() => openChapter(liveDrop.id)}
+          aria-label="Jump into a chapter"
+        >
           <span aria-hidden>→</span>
         </button>
       </footer>

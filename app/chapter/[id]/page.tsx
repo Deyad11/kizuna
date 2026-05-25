@@ -37,7 +37,7 @@ const CHAPTER_DATA: Record<
 > = {
   "blue-lock": {
     title: "Blue Lock",
-    chapter: 247,
+    chapter: 346,
     type: "Manga",
     genres: ["Sports", "Action"],
     droppedMinutesAgo: 28,
@@ -54,7 +54,7 @@ const CHAPTER_DATA: Record<
   },
   "jujutsu-kaisen": {
     title: "Jujutsu Kaisen",
-    chapter: 268,
+    chapter: 271,
     type: "Manga",
     genres: ["Action", "Supernatural"],
     droppedMinutesAgo: 45,
@@ -71,7 +71,7 @@ const CHAPTER_DATA: Record<
   },
   "one-piece": {
     title: "One Piece",
-    chapter: 1118,
+    chapter: 1183,
     type: "Manga",
     genres: ["Action", "Adventure"],
     droppedMinutesAgo: 62,
@@ -88,7 +88,7 @@ const CHAPTER_DATA: Record<
   },
   "tower-of-god": {
     title: "Tower of God",
-    chapter: 630,
+    chapter: 625,
     type: "Webtoon",
     genres: ["Action", "Fantasy"],
     droppedMinutesAgo: 15,
@@ -105,7 +105,7 @@ const CHAPTER_DATA: Record<
   },
   dandadan: {
     title: "Dandadan",
-    chapter: 142,
+    chapter: 234,
     type: "Manga",
     genres: ["Action", "Romance"],
     droppedMinutesAgo: 35,

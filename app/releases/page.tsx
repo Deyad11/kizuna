@@ -7,7 +7,7 @@ const RELEASES = [
   {
     id: "blue-lock",
     title: "Blue Lock",
-    chapter: 247,
+    chapter: 346,
     type: "manga",
     day: "TUE",
     time: "20:00 IST",
@@ -21,7 +21,7 @@ const RELEASES = [
   {
     id: "jujutsu-kaisen",
     title: "Jujutsu Kaisen",
-    chapter: 268,
+    chapter: 271,
     type: "manga",
     day: "SUN",
     time: "10:00 IST",
@@ -35,7 +35,7 @@ const RELEASES = [
   {
     id: "one-piece",
     title: "One Piece",
-    chapter: 1118,
+    chapter: 1183,
     type: "manga",
     day: "SUN",
     time: "10:00 IST",
@@ -49,7 +49,7 @@ const RELEASES = [
   {
     id: "tower-of-god",
     title: "Tower of God",
-    chapter: 630,
+    chapter: 625,
     type: "webtoon",
     day: "SUN",
     time: "11:00 IST",
@@ -63,7 +63,7 @@ const RELEASES = [
   {
     id: "dandadan",
     title: "Dandadan",
-    chapter: 142,
+    chapter: 234,
     type: "manga",
     day: "MON",
     time: "10:00 IST",
@@ -77,7 +77,7 @@ const RELEASES = [
   {
     id: "frieren",
     title: "Frieren",
-    chapter: 142,
+    chapter: 135,
     type: "manga",
     day: "FRI",
     time: "10:00 IST",
@@ -91,7 +91,7 @@ const RELEASES = [
   {
     id: "solo-leveling",
     title: "Solo Leveling: Ragnarok",
-    chapter: 78,
+    chapter: 52,
     type: "manhwa",
     day: "WED",
     time: "13:00 IST",
@@ -105,7 +105,7 @@ const RELEASES = [
   {
     id: "omniscient-reader",
     title: "Omniscient Reader",
-    chapter: 195,
+    chapter: 306,
     type: "manhwa",
     day: "FRI",
     time: "13:00 IST",
@@ -119,7 +119,7 @@ const RELEASES = [
   {
     id: "oshi-no-ko",
     title: "Oshi no Ko",
-    chapter: 168,
+    chapter: 166,
     type: "manga",
     day: "WED",
     time: "10:00 IST",
@@ -133,7 +133,7 @@ const RELEASES = [
   {
     id: "one-punch-man",
     title: "One Punch Man",
-    chapter: 210,
+    chapter: 230,
     type: "manga",
     day: "THU",
     time: "12:00 IST",
