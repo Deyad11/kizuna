@@ -4,29 +4,25 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export async function GET(request: NextRequest) {
-  // Extract the full URL so we can parse query parameters
   const requestUrl = new URL(request.url)
-
-  // Google sends back a 'code' parameter after successful authentication.
-  // Example URL: http://localhost:3000/auth/callback?code=4/0AfJohXn...
   const code = requestUrl.searchParams.get('code')
+  const next = requestUrl.searchParams.get('next') ?? '/onboarding'
 
-  // 'next' is a custom parameter we can pass when initiating sign-in.
-  // It lets us redirect to a specific page after login.
-  // Default to the landing page if not specified.
-  const next = requestUrl.searchParams.get('next') ?? '/'
+  console.log("CALLBACK HIT, code:", code ? "EXISTS" : "MISSING")
+  console.log("ALL PARAMS:", requestUrl.searchParams.toString())
 
   if (code) {
     const cookieStore = await cookies()
+    
+    // Log all cookies present at callback time
+    console.log("COOKIES AT CALLBACK:", cookieStore.getAll().map(c => c.name))
 
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
         cookies: {
-          getAll() {
-            return cookieStore.getAll()
-          },
+          getAll() { return cookieStore.getAll() },
           setAll(cookiesToSet) {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
@@ -36,30 +32,28 @@ export async function GET(request: NextRequest) {
       }
     )
 
-    // This is the critical step. exchangeCodeForSession does:
-    // 1. Sends the 'code' to Supabase's servers
-    // 2. Supabase sends it to Google to verify it's real
-    // 3. Google returns an access_token and id_token to Supabase
-    // 4. Supabase creates/finds the user in auth.users
-    // 5. Supabase returns its OWN access_token + refresh_token to us
-    // 6. These get stored in cookies via the setAll function above
-const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code)
+    console.log("EXCHANGE ERROR:", JSON.stringify(error))
+    console.log("EXCHANGE USER:", data?.user?.email)
 
-console.log("DATA:", data)
-console.log("ERROR:", error)
+    if (!error && data.user) {
+      // Check if onboarding is complete
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('onboarding_complete')
+        .eq('id', data.user.id)
+        .single()
 
-    if (!error) {
-      // Auth succeeded. Redirect to the requested page.
-      return NextResponse.redirect(new URL(next, requestUrl.origin))
+      console.log("PROFILE:", profile)
+
+      const redirectTo = profile?.onboarding_complete ? '/dashboard' : '/onboarding'
+      return NextResponse.redirect(new URL(redirectTo, requestUrl.origin))
     }
 
-    // If there was an error, log it (server-side, not visible to user)
-    console.error('Auth exchange error:', error)
+    return NextResponse.redirect(
+      new URL(`/?error=${encodeURIComponent(error?.message ?? 'exchange_failed')}`, requestUrl.origin)
+    )
   }
 
-  // If we get here, something went wrong (no code, or exchange failed).
-  // Redirect to home with an error indicator.
-  return NextResponse.redirect(
-    new URL('/?error=auth_failed', requestUrl.origin)
-  )
+  return NextResponse.redirect(new URL('/?error=no_code', requestUrl.origin))
 }

@@ -5,7 +5,9 @@ import { useRouter } from 'next/navigation';
 import type { User } from '@supabase/supabase-js';
 import styles from '../styles/landing.module.css';
 import SignInButton from '@/components/SignInButton';
+
 import { createClient } from '@/lib/supabase/client';
+
 
 interface ChapterDrop {
   id: string;
@@ -127,6 +129,7 @@ export default function Home() {
   const [liveIndex, setLiveIndex] = useState(fallbackChapterDrops.length - 1);
   const [user, setUser] = useState<User | null>(null);
   const liveDrop = chapterDrops[liveIndex] || chapterDrops[0];
+  const blueLockDrop = chapterDrops.find((drop) => drop.id === 'blue-lock') || chapterDrops[0];
   const previewDrops = [chapterDrops[4] || chapterDrops[0], chapterDrops[1] || chapterDrops[0], chapterDrops[0]];
 
   useEffect(() => {
@@ -352,92 +355,186 @@ export default function Home() {
       </section>
 
       <section className={styles.kzHow}>
-        <div className={styles.kzHowHeader}>
-          <div>
-            <h2>How Kizuna works</h2>
-            <p>Real-time reactions, matched around the exact chapter moment.</p>
+  <div className={styles.kzHowHeader}>
+    <div>
+      <h2>How Kizuna works</h2>
+      <p>
+        Real-time reactions, matched around the exact chapter moment.
+      </p>
+    </div>
+
+    <button className={styles.kzHowCta}>
+      TRY IT LIVE
+    </button>
+  </div>
+
+  <div className={styles.kzWorksGrid}>
+
+    {/* CARD 1 */}
+
+    <article className={styles.kzWorkCard}>
+
+      <div className={styles.kzWorkNum}>
+        01
+      </div>
+
+      <h3>Pick a live drop</h3>
+
+      <p>
+        Choose a chapter that just dropped or is trending right now.
+      </p>
+
+      <div className={styles.kzMiniDropPanel}>
+
+        {previewDrops.map((drop)=>(
+          <div
+            key={drop.id}
+            className={styles.kzMiniDrop}
+          >
+
+            <span
+              style={{
+                backgroundImage:`url(${drop.coverImage})`
+              }}
+            />
+
+            <div>
+
+              <strong>
+                {drop.title}
+              </strong>
+
+              <small>
+                {drop.readers} reading now
+              </small>
+
+            </div>
+
           </div>
-          <button className={styles.kzHowCta} onClick={() => openChapter(liveDrop.id)}>
-            try it live <span aria-hidden>→</span>
-          </button>
+        ))}
+
+      </div>
+
+    </article>
+
+
+    {/* CARD 2 */}
+
+    <article className={styles.kzWorkCard}>
+
+      <div className={styles.kzWorkNum}>
+        02
+      </div>
+
+      <h3>
+        We find your match
+      </h3>
+
+      <p>
+        We match you with someone reading the same chapter.
+      </p>
+
+      <div className={styles.kzWorkMatch}>
+
+        <span
+          style={{backgroundImage:"url('/bluelock.png')"}}
+        />
+
+       <i>⇄</i>
+
+        <span
+          style={{backgroundImage:"url('/denji.png')"}}
+        />
+
+      </div>
+
+
+      <div className={styles.kzFindingCard}>
+
+        <strong>
+          Finding someone...
+        </strong>
+
+        <small>
+          Matched by chapter timing and taste overlap
+        </small>
+
+      </div>
+
+    </article>
+
+
+    {/* CARD 3 */}
+
+    <article className={styles.kzWorkCard}>
+
+      <div className={styles.kzWorkNum}>
+        03
+      </div>
+
+      <h3>
+        Land on the same scene
+      </h3>
+
+      <p>
+        You both land on the exact moment that sparked the reaction.
+      </p>
+
+      <div
+        className={styles.kzWorkScene}
+        style={{
+          backgroundImage:
+          `url(${blueLockDrop.bannerImage || blueLockDrop.coverImage})`
+        }}
+      >
+
+      <span>
+      {/* NAH THAT CURVE SHOT... */}
+      </span>
+
+      </div>
+
+    </article>
+
+
+    {/* CARD 4 */}
+
+    <article className={styles.kzWorkCard}>
+
+      <div className={styles.kzWorkNum}>
+        04
+      </div>
+
+      <h3>
+        Chat with real reactions
+      </h3>
+
+      <p>
+        No awkward intros. Just real reactions.
+      </p>
+
+
+      <div className={styles.kzWorkChat}>
+
+        <div className={styles.kzWorkBubblePrimary}>
+          NAH THAT CURVE SHOT
+          WAS INSANE
         </div>
 
-        <div className={styles.kzProcessBoard}>
-          <div className={styles.kzProcessSteps}>
-            {[
-              ['01', 'Pick a live drop', 'Choose the chapter everyone is reacting to right now.'],
-              ['02', 'Get matched fast', 'We pair you with someone who just read the same drop.'],
-              ['03', 'Land on the moment', 'Both of you see the scene that sparked the reaction.'],
-              ['04', 'Chat with context', 'No awkward opener. The chapter already started the conversation.'],
-            ].map(([num, title, copy]) => (
-              <article key={num} className={styles.kzProcessStep}>
-                <span>{num}</span>
-                <div>
-                  <h3>{title}</h3>
-                  <p>{copy}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-
-          <article className={styles.kzProcessDemo}>
-            <div className={styles.kzDemoDrops}>
-              <div className={styles.kzMiniTabs}>
-                <span>Manga</span>
-                <span>Anime</span>
-                <span>Webtoon</span>
-              </div>
-              {previewDrops.map((drop) => (
-                <button key={`mini-${drop.id}`} className={styles.kzMiniDrop} onClick={() => openChapter(drop.id)}>
-                  <span style={{ backgroundImage: `url(${drop.coverImage})` }} />
-                  <strong>{drop.title}</strong>
-                  <small>Chapter {drop.chapter}</small>
-                  <em>
-                    <b /> {drop.readers} reading now
-                  </em>
-                </button>
-              ))}
-            </div>
-
-            <div className={styles.kzDemoMatch} aria-hidden>
-              <span style={{ backgroundImage: `url(${avatarImages[0]})` }} />
-              <b>↔</b>
-              <span style={{ backgroundImage: `url(${avatarImages[1]})` }} />
-            </div>
-
-            <div
-              className={styles.kzDemoScene}
-              style={{ backgroundImage: `url(${liveDrop.bannerImage || liveDrop.coverImage})` }}
-            >
-              <span>NAH THAT CURVE SHOT...</span>
-            </div>
-
-            <div className={styles.kzDemoChat}>
-              <span className={styles.kzChatBubblePrimary}>NAH THAT CURVE SHOT WAS INSANE</span>
-              <span className={styles.kzChatBubbleSecondary}>I LOST IT BROOO WHAT WAS THAT ANGLE</span>
-            </div>
-          </article>
-
-          <div className={styles.kzBondRow}>
-            <button>
-              <span>⊕</span>
-              <strong>Add as Kizuna</strong>
-              <small>Stay connected after the drop</small>
-            </button>
-            <button>
-              <span>▣</span>
-              <strong>Keep chatting</strong>
-              <small>Continue the conversation</small>
-            </button>
-            <button>
-              <span>↻</span>
-              <strong>Next drop</strong>
-              <small>Find a new match instantly</small>
-            </button>
-          </div>
+        <div className={styles.kzWorkBubbleSecondary}>
+          I LOST IT BROOO
         </div>
-      </section>
 
+        <div className={styles.kzWorkBubblePrimary}>
+          WAIT DID YOU CATCH THAT?
+        </div>
+
+      </div>
+
+    </article>
+
+  </div>
+</section>
       <footer className={styles.kzFinal}>
         <div>
           <span className={styles.kzFinalEyebrow}>live after every drop</span>

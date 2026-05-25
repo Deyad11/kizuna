@@ -1,5 +1,4 @@
 'use client';
-
 import { createClient } from '@/lib/supabase/client';
 
 interface Props {
@@ -13,14 +12,16 @@ export default function SignInButton({
   text = "Continue with Google",
   next = '/',
 }: Props) {
-
   const signIn = async () => {
     const supabase = createClient();
-
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
+        queryParams: {
+          access_type: 'offline',
+          prompt: 'consent',
+        },
       },
     });
   };

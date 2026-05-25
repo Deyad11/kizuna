@@ -613,386 +613,521 @@
   padding: 16px 26px;
 }
 
-.kzHowRail {
-  display: grid;
-  gap: 30px;
-  grid-template-columns: repeat(5, minmax(230px, 1fr));
-  position: relative;
+/* ========================= */
+/* HOW KIZUNA WORKS V2 */
+/* ========================= */
+
+.kzHowHeader{
+display:flex;
+justify-content:space-between;
+align-items:flex-end;
+
+margin:90px 0 40px;
 }
 
-.kzFlowCard {
-  background:
-    radial-gradient(circle at 15% 0%, rgba(111, 71, 221, 0.12), transparent 48%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.015)),
-    rgba(9, 11, 16, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 18px;
-  min-height: 500px;
-  overflow: hidden;
-  padding: 30px 30px 24px;
-  position: relative;
+.kzHowHeader h2{
+font-size:clamp(48px,5vw,76px);
+font-weight:800;
+line-height:.92;
+margin:0;
 }
 
-.kzFlowCard:not(:last-child)::after {
-  align-items: center;
-  background: #11131a;
-  border: 2px solid rgba(166, 92, 255, 0.8);
-  border-radius: 50%;
-  box-shadow: 0 0 0 4px rgba(166, 92, 255, 0.08);
-  color: var(--text);
-  content: '→';
-  display: flex;
-  font-size: 22px;
-  font-weight: 800;
-  height: 36px;
-  justify-content: center;
-  position: absolute;
-  right: -34px;
-  top: 52%;
-  width: 36px;
-  z-index: 4;
+.kzHowHeader p{
+font-size:18px;
+max-width:620px;
+margin-top:14px;
+
+color:rgba(246,242,247,.55);
 }
 
-.kzFlowCard:not(:last-child)::before {
-  border-top: 2px dashed rgba(166, 92, 255, 0.38);
-  content: '';
-  position: absolute;
-  right: -30px;
-  top: calc(52% + 18px);
-  width: 30px;
-  z-index: 3;
+.kzHowCta{
+
+padding:16px 28px;
+
+border-radius:999px;
+
+border:1px solid rgba(255,255,255,.08);
+
+background:rgba(255,255,255,.03);
+
+color:white;
+
+font-weight:700;
 }
 
-.kzStepNum {
-  align-items: center;
-  border: 2px solid rgba(166, 92, 255, 0.45);
-  border-radius: 14px;
-  color: #ad78ff;
-  display: inline-flex;
-  font-size: 20px;
-  font-weight: 800;
-  height: 44px;
-  justify-content: center;
-  margin-bottom: 28px;
-  width: 48px;
+
+/* MAIN LAYOUT */
+
+.kzWorksGrid{
+
+display:grid;
+
+grid-template-columns:repeat(4,minmax(280px,1fr));
+
+gap:32px;
+
+align-items:start; /* change this */
+
+margin-top:40px;
+position:relative;
 }
 
-.kzFlowCard h3 {
-  font-size: 24px;
-  font-weight: 800;
-  line-height: 1.18;
-  margin: 0 0 18px;
+
+/* CONNECTION LINE */
+
+.kzWorksGrid::before{
+
+content:"";
+
+position:absolute;
+
+left:12%;
+right:12%;
+
+top:50%;
+
+border-top:
+1px dashed rgba(166,92,255,.25);
+
+z-index:0;
+
 }
 
-.kzFlowCard p {
-  color: rgba(246, 242, 247, 0.6);
-  font-size: 16px;
-  font-weight: 650;
-  line-height: 1.52;
-  margin: 0;
+
+/* CARD */
+
+.kzWorkCard{
+
+position:relative;
+
+display:flex;
+flex-direction:column;
+
+justify-content:space-between;
+
+padding:28px;
+
+height:560px;   /* IMPORTANT */
+
+border-radius:28px;
+
+overflow:hidden;
+
+background:
+radial-gradient(
+circle at top,
+rgba(120,75,220,.08),
+transparent 45%
+),
+linear-gradient(
+180deg,
+rgba(255,255,255,.04),
+rgba(255,255,255,.015)
+);
+
+border:1px solid rgba(255,255,255,.08);
+
+backdrop-filter:blur(16px);
+
+min-height:unset;
 }
 
-.kzMiniDropPanel {
-  background: rgba(4, 5, 8, 0.68);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 13px;
-  bottom: 24px;
-  left: 28px;
-  overflow: hidden;
-  position: absolute;
-  right: 28px;
+
+.kzWorkCard:hover{
+
+transform:translateY(-6px);
+
+border-color:
+rgba(166,92,255,.28);
+
 }
 
-.kzMiniTabs {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  padding: 8px;
+
+/* STEP */
+
+.kzWorkNum{
+
+width:54px;
+height:54px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+border-radius:16px;
+
+background:
+
+linear-gradient(
+135deg,
+rgba(166,92,255,.28),
+rgba(233,84,178,.14)
+);
+
+border:
+1px solid rgba(166,92,255,.25);
+
+font-size:20px;
+font-weight:800;
+
+margin-bottom:28px;
+
 }
 
-.kzMiniTabs span {
-  border-radius: 999px;
-  color: rgba(246, 242, 247, 0.58);
-  font-size: 12px;
-  font-weight: 800;
-  padding: 8px 5px;
-  text-align: center;
+
+/* TITLE */
+
+.kzWorkCard h3{
+
+font-size:40px;
+
+line-height:1.05;
+
+margin:0 0 14px;
+
+font-weight:800;
+
+max-width:240px;
+
 }
 
-.kzMiniTabs span:first-child {
-  background: linear-gradient(135deg, rgba(233, 84, 178, 0.6), rgba(117, 70, 232, 0.72));
-  color: white;
+.kzWorkCard p{
+
+font-size:16px;
+
+line-height:1.6;
+
+max-width:240px;
+
+margin-bottom:30px;
+
+color:
+rgba(246,242,247,.55);
+
 }
 
-.kzMiniDrop {
-  background: transparent;
-  border: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  color: var(--text);
-  cursor: pointer;
-  display: grid;
-  gap: 0 12px;
-  grid-template-columns: 58px 1fr;
-  padding: 12px;
-  text-align: left;
+
+
+
+
+/* LIVE DROP */
+
+.kzMiniDropPanel{
+margin-top:auto;
+
+width:100%;
+
+background:rgba(5,6,10,.45);
+
+border:1px solid rgba(255,255,255,.06);
+
+border-radius:18px;
+
+overflow:hidden;
 }
 
-.kzMiniDrop > span {
-  background-position: center;
-  background-size: cover;
-  border-radius: 8px;
-  grid-row: span 3;
-  height: 58px;
-  width: 58px;
+.kzMiniDrop{
+
+display:grid;
+
+grid-template-columns:48px 1fr;
+
+gap:12px;
+
+padding:10px 14px;
+
+min-height:72px;
+
+border-bottom:1px solid rgba(255,255,255,.05);
 }
 
-.kzMiniDrop strong {
-  font-size: 14px;
-  line-height: 1.2;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.kzMiniDrop:last-child{
+border-bottom:none;
 }
 
-.kzMiniDrop small,
-.kzMiniDrop em {
-  color: rgba(246, 242, 247, 0.56);
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 700;
+.kzMiniDrop span{
+
+width:48px;
+height:48px;
+
+border-radius:10px;
+
+background-size:cover;
+background-position:center;
 }
 
-.kzMiniDrop em b {
-  background: var(--pink);
-  border-radius: 50%;
-  display: inline-block;
-  height: 7px;
-  margin-right: 6px;
-  width: 7px;
+.kzMiniDrop strong{
+
+display:block;
+
+font-size:15px;
+
+margin-bottom:2px;
 }
 
-.kzMatchScene {
-  align-items: center;
-  display: grid;
-  gap: 18px;
-  grid-template-columns: 1fr auto 1fr;
-  margin-top: 82px;
+.kzMiniDrop small{
+
+font-size:13px;
+
+color:rgba(246,242,247,.55);
 }
 
-.kzMatchScene span {
-  background-color: #1e2028;
-  background-position: center;
-  background-size: cover;
-  border: 3px solid rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  height: 86px;
-  width: 86px;
+/* MATCH CARD */
+.kzWorkMatch{
+
+position:relative;
+
+display:flex;
+
+justify-content:center;
+align-items:center;
+
+gap:34px;
+
+height:120px;
+
+margin-top:20px;
 }
 
-.kzMatchScene b {
-  align-items: center;
-  border: 2px solid rgba(166, 92, 255, 0.72);
-  border-radius: 10px;
-  color: #b879ff;
-  display: inline-flex;
-  font-size: 24px;
-  font-weight: 800;
-  height: 48px;
-  justify-content: center;
-  width: 48px;
+.kzWorkMatch::before{
+
+content:"";
+
+position:absolute;
+
+width:150px;
+height:150px;
+
+border-radius:50%;
+
+border:1px solid rgba(166,92,255,.08);
 }
 
-.kzMatchingCard {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  bottom: 66px;
-  left: 30px;
-  padding: 18px 20px;
-  position: absolute;
-  right: 30px;
+.kzWorkMatch::after{
+
+content:"";
+
+position:absolute;
+
+width:220px;
+height:220px;
+
+border-radius:50%;
+
+border:1px solid rgba(166,92,255,.05);
 }
 
-.kzMatchingCard strong {
-  align-items: center;
-  display: flex;
-  font-size: 17px;
-  gap: 10px;
+.kzWorkMatch span{
+
+width:62px;
+height:62px;
+
+background-size:cover;
+background-position:center;
+
+border-radius:50%;
+
+border:2px solid rgba(255,255,255,.12);
+
+z-index:2;
 }
 
-.kzMatchingCard i {
-  background: #9f62ff;
-  border-radius: 50%;
-  box-shadow: 0 0 18px rgba(159, 98, 255, 0.7);
-  height: 13px;
-  width: 13px;
+.kzWorkMatch i{
+
+display:flex;
+
+align-items:center;
+justify-content:center;
+
+width:46px;
+height:46px;
+
+font-style:normal;
+
+border-radius:14px;
+
+background:
+linear-gradient(
+135deg,
+rgba(166,92,255,.35),
+rgba(233,84,178,.15)
+);
+
+z-index:2;
 }
 
-.kzMatchingCard small {
-  color: rgba(246, 242, 247, 0.5);
-  display: block;
-  font-size: 12px;
-  font-weight: 700;
-  margin-top: 9px;
+
+/* bottom status card */
+
+.kzFindingCard{
+
+margin-top:20px;
+
+padding:16px;
+
+border-radius:14px;
+
+background:
+rgba(255,255,255,.035);
+
+border:
+1px solid rgba(255,255,255,.06);
+
+backdrop-filter:blur(12px);
 }
 
-.kzScenePreview {
-  align-items: center;
-  background-position: center;
-  background-size: cover;
-  border-radius: 12px;
-  display: flex;
-  filter: grayscale(1) brightness(0.85);
-  height: 278px;
-  justify-content: flex-end;
-  margin-top: 46px;
-  overflow: hidden;
-  padding: 22px;
-  position: relative;
+.kzFindingCard strong{
+
+display:block;
+
+font-size:15px;
+
+margin-bottom:6px;
 }
 
-.kzScenePreview::before {
-  background: linear-gradient(90deg, transparent 20%, rgba(255, 255, 255, 0.9));
-  border-radius: 50%;
-  content: '';
-  height: 126px;
-  position: absolute;
-  right: 20px;
-  top: 40px;
-  width: 126px;
+.kzFindingCard small{
+
+font-size:13px;
+
+line-height:1.4;
+
+color:
+rgba(246,242,247,.52);
+
 }
 
-.kzScenePreview span {
-  color: #111217;
-  font-size: 17px;
-  font-weight: 800;
-  max-width: 96px;
-  position: relative;
-  text-align: center;
+/* SCENE */
+
+.kzWorkScene{
+
+margin-top:auto;
+
+height:180px;
+
+border-radius:16px;
+
+overflow:hidden;
+
+background-size:cover;
+
+background-position:center;
+
+position:relative;
+
+filter:
+grayscale(.8)
+brightness(.75);
 }
 
-.kzSceneCaption {
-  color: rgba(246, 242, 247, 0.54);
-  display: block;
-  font-size: 12px;
-  font-weight: 800;
-  margin-top: 13px;
-  text-align: center;
+.kzWorkScene span{
+
+position:absolute;
+
+bottom:14px;
+left:14px;
+
+padding:10px 16px;
+
+border-radius:999px;
+
+background:white;
+
+color:black;
+
+font-size:14px;
+
+font-weight:800;
+
+z-index:3;
 }
 
-.kzChatPreview {
-  bottom: 24px;
-  display: grid;
-  gap: 12px;
-  left: 28px;
-  position: absolute;
-  right: 28px;
+
+/* CHAT */
+
+.kzWorkChat{
+
+display:flex;
+flex-direction:column;
+
+gap:14px;
+
+margin-top:auto;
 }
 
-.kzChatAvatar,
-.kzChatAvatarAlt {
-  background-position: center;
-  background-size: cover;
-  border: 2px solid rgba(255, 255, 255, 0.08);
-  border-radius: 50%;
-  height: 42px;
-  position: absolute;
-  width: 42px;
+
+.kzWorkBubblePrimary{
+
+padding:18px;
+
+border-radius:16px;
+
+font-size:15px;
+
+font-weight:800;
+
+align-self:flex-end;
+
+background:
+
+linear-gradient(
+135deg,
+rgba(166,92,255,.38),
+rgba(233,84,178,.18)
+);
+
+max-width:220px;
+
 }
 
-.kzChatAvatar {
-  left: 0;
-  top: 0;
+
+.kzWorkBubbleSecondary{
+
+padding:18px;
+
+border-radius:16px;
+
+font-size:15px;
+
+font-weight:800;
+
+background:
+rgba(255,255,255,.06);
+
+max-width:220px;
+
 }
 
-.kzChatAvatarAlt {
-  right: 16px;
-  top: 128px;
+
+/* MOBILE */
+
+@media(max-width:1200px){
+
+.kzWorksGrid{
+
+grid-template-columns:1fr 1fr;
+
 }
 
-.kzChatBubblePrimary,
-.kzChatBubbleSecondary {
-  border-radius: 10px;
-  color: rgba(246, 242, 247, 0.86);
-  font-size: 14px;
-  font-weight: 800;
-  line-height: 1.55;
-  padding: 16px;
 }
 
-.kzChatBubblePrimary {
-  background: linear-gradient(135deg, rgba(233, 84, 178, 0.28), rgba(117, 70, 232, 0.45));
-  margin-left: 58px;
+@media(max-width:760px){
+
+.kzWorksGrid{
+
+grid-template-columns:1fr;
+
 }
 
-.kzChatBubbleSecondary {
-  background: rgba(255, 255, 255, 0.06);
-  margin-right: 70px;
-  margin-top: 28px;
+.kzWorksGrid::before{
+
+display:none;
 }
 
-.kzMessageBar {
-  align-items: center;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 13px;
-  color: rgba(246, 242, 247, 0.42);
-  display: flex;
-  font-size: 13px;
-  font-weight: 700;
-  justify-content: space-between;
-  padding: 13px 14px;
+.kzWorkCard::after{
+
+display:none;
 }
 
-.kzMessageBar b {
-  color: #b879ff;
-}
-
-.kzAfterActions {
-  bottom: 42px;
-  display: grid;
-  gap: 12px;
-  left: 28px;
-  position: absolute;
-  right: 28px;
-}
-
-.kzAfterActions button {
-  align-items: center;
-  background: rgba(255, 255, 255, 0.045);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 11px;
-  color: var(--text);
-  display: grid;
-  gap: 0 14px;
-  grid-template-columns: 42px 1fr;
-  padding: 15px;
-  text-align: left;
-}
-
-.kzAfterActions span {
-  color: #dd62f0;
-  font-size: 25px;
-  grid-row: span 2;
-}
-
-.kzAfterActions strong {
-  font-size: 14px;
-}
-
-.kzAfterActions small {
-  color: rgba(246, 242, 247, 0.5);
-  font-size: 12px;
-  font-weight: 700;
-  margin-top: 5px;
-}
-
-.kzFinal {
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.018)),
-    rgba(9, 10, 15, 0.86);
-  border: 1px solid var(--line);
-  border-radius: 18px;
 }
 
 .kzFinalEyebrow {
@@ -1123,7 +1258,7 @@
   position: relative;
 }
 
-.kzDemoDrops {
+/* .kzDemoDrops {
   align-self: center;
   background: rgba(4, 5, 8, 0.68);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1139,7 +1274,7 @@
   grid-column: 2;
   justify-content: center;
   margin-top: 18px;
-}
+} */
 
 .kzDemoMatch span {
   background-position: center;
@@ -1162,7 +1297,7 @@
   width: 42px;
 }
 
-.kzDemoScene {
+/* .kzDemoScene {
   align-items: center;
   align-self: end;
   background-position: center;
@@ -1176,7 +1311,7 @@
   overflow: hidden;
   padding: 24px;
   position: relative;
-}
+} */
 
 .kzDemoScene::before {
   background: linear-gradient(90deg, transparent 20%, rgba(255, 255, 255, 0.9));
@@ -1198,11 +1333,11 @@
   text-align: center;
 }
 
-.kzDemoChat {
+/* .kzDemoChat {
   align-self: center;
   display: grid;
   gap: 18px;
-}
+} */
 
 .kzDemoChat span {
   border-radius: 13px;
@@ -1213,13 +1348,13 @@
   padding: 18px;
 }
 
-.kzBondRow {
+/* .kzBondRow {
   display: grid;
   gap: 12px;
   grid-column: 1 / -1;
   grid-template-columns: repeat(3, 1fr);
   padding: 14px;
-}
+} */
 
 .kzBondRow button {
   align-items: center;
@@ -1295,14 +1430,14 @@
     min-width: 150px;
   }
 
-  .kzHowRail {
+  /* .kzHowRail {
     grid-auto-columns: minmax(285px, 1fr);
     grid-auto-flow: column;
     grid-template-columns: none;
     overflow-x: auto;
     padding-bottom: 10px;
     scrollbar-width: none;
-  }
+  } */
 
   .kzHowRail::-webkit-scrollbar {
     display: none;
@@ -1318,41 +1453,7 @@
     grid-template-columns: repeat(3, 1fr);
   }
 
-  .kzProcessBoard,
-  .kzProcessDemo {
-    grid-template-columns: 1fr;
-  }
 
-  .kzProcessSteps {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .kzProcessStep:nth-child(2) {
-    border-right: 0;
-  }
-
-  .kzProcessStep {
-    border-right: 1px solid rgba(255, 255, 255, 0.07);
-  }
-
-  .kzProcessStep:nth-child(even) {
-    border-right: 0;
-  }
-
-  .kzDemoMatch,
-  .kzDemoScene {
-    grid-column: auto;
-  }
-
-  .kzProcessDemo {
-    min-height: 0;
-  }
-}
-
-@media (max-width: 720px) {
-  .kz {
-    padding: 14px;
-  }
 
   .kzNav {
     display: flex;
@@ -1446,10 +1547,10 @@
     overflow-x: visible;
   }
 
-  .kzFlowCard {
+  /* .kzFlowCard {
     min-height: 460px;
     padding: 22px;
-  }
+  } */
 
   .kzFlowCard:not(:last-child)::before,
   .kzFlowCard:not(:last-child)::after {
@@ -1472,7 +1573,7 @@
     width: 58px;
   }
 
-  .kzProcessSteps,
+  /* .kzProcessSteps,
   .kzBondRow {
     grid-template-columns: 1fr;
   }
@@ -1484,7 +1585,7 @@
 
   .kzProcessDemo {
     padding: 16px;
-  }
+  } */
 
   .kzDemoScene {
     height: 250px;
