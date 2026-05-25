@@ -1,0 +1,19 @@
+.page { min-height: 100vh; background: #0a0a0f; color: #e8e8f0; font-family: 'DM Sans', 'Helvetica Neue', sans-serif; }
+.nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 28px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.logo { background: none; border: none; color: #fff; font-size: 17px; font-weight: 700; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 6px; }
+.logo span { opacity: 0.6; }
+.back { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; font-family: inherit; }
+.hero { max-width: 640px; margin: 0 auto; padding: 64px 28px 48px; text-align: center; }
+.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; color: rgba(255,255,255,0.3); margin: 0 0 16px; }
+.heading { font-size: clamp(36px,7vw,64px); font-weight: 900; color: #fff; margin: 0 0 20px; letter-spacing: -0.03em; line-height: 1.05; }
+.sub { font-size: 16px; color: rgba(255,255,255,0.45); line-height: 1.7; margin: 0; }
+.steps { max-width: 640px; margin: 0 auto; padding: 0 28px 64px; display: flex; flex-direction: column; gap: 0; }
+.step { display: flex; gap: 28px; padding: 32px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.step:last-child { border-bottom: none; }
+.stepNum { font-size: 13px; font-weight: 800; letter-spacing: 0.06em; width: 32px; flex-shrink: 0; padding-top: 3px; }
+.stepContent { display: flex; flex-direction: column; gap: 8px; }
+.stepTitle { font-size: 22px; font-weight: 800; color: #fff; margin: 0; letter-spacing: -0.02em; }
+.stepBody { font-size: 15px; color: rgba(255,255,255,0.45); line-height: 1.7; margin: 0; }
+.cta { text-align: center; padding: 48px 28px 80px; border-top: 1px solid rgba(255,255,255,0.06); }
+.cta h2 { font-size: 28px; font-weight: 800; color: #fff; margin: 0 0 24px; letter-spacing: -0.02em; }
+.ctaBtn { background: #fff; color: #0a0a0f; border: none; padding: 16px 32px; border-radius: 14px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }

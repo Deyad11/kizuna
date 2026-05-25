@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import styles from "../styles/landing.module.css";
 import SignInButton from "@/components/SignInButton";
+import SignOutButton from "@/components/SignOutButton";
 
 import { createClient } from "@/lib/supabase/client";
 
@@ -219,8 +220,10 @@ export default function Home() {
         <div className={styles.kzNavMid}>
           <button className={styles.kzNavActive}>live now</button>
           <button onClick={() => router.push("/releases")}>calendar</button>
-          <button>how it works</button>
-          <button>about</button>
+          <button onClick={() => router.push("/how-it-works")}>
+            how it works
+          </button>
+          <button onClick={() => router.push("/about")}>about</button>
         </div>
 
         <div className={styles.kzNavRight}>
@@ -230,8 +233,9 @@ export default function Home() {
                 className={styles.kzBtnSolid}
                 onClick={() => openChapter(liveDrop.id)}
               >
-                jump into a chapter <span aria-hidden></span>
+                jump into a chapter
               </button>
+              <SignOutButton className={styles.kzBtnGhost} text="sign out" />
               <button
                 className={styles.kzProfileButton}
                 aria-label={`Open ${profileName} profile`}

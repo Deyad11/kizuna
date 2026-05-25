@@ -1,0 +1,22 @@
+.page { min-height: 100vh; background: #0a0a0f; color: #e8e8f0; font-family: 'DM Sans', 'Helvetica Neue', sans-serif; }
+.nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 28px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.logo { background: none; border: none; color: #fff; font-size: 17px; font-weight: 700; cursor: pointer; font-family: inherit; display: flex; align-items: center; gap: 6px; }
+.logo span { opacity: 0.6; }
+.back { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); padding: 8px 16px; border-radius: 8px; font-size: 13px; cursor: pointer; font-family: inherit; }
+.hero { text-align: center; padding: 64px 28px 40px; }
+.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; color: rgba(255,255,255,0.3); margin: 0 0 16px; }
+.heading { font-size: 80px; font-weight: 900; color: #fff; margin: 0 0 8px; }
+.kanji { font-size: 14px; color: rgba(255,255,255,0.35); margin: 0 0 8px; letter-spacing: 0.04em; }
+.def { font-size: 15px; color: rgba(255,255,255,0.5); margin: 0; font-style: italic; }
+.body { max-width: 580px; margin: 0 auto; padding: 40px 28px 0; display: flex; flex-direction: column; gap: 20px; }
+.body p { font-size: 16px; color: rgba(255,255,255,0.55); line-height: 1.8; margin: 0; }
+.body h2 { font-size: 13px; font-weight: 700; letter-spacing: 0.1em; color: rgba(255,255,255,0.3); text-transform: uppercase; margin: 0; }
+.divider { height: 1px; background: rgba(255,255,255,0.07); }
+.team { display: flex; flex-direction: column; gap: 16px; }
+.member { display: flex; flex-direction: column; gap: 4px; }
+.memberName { font-size: 18px; font-weight: 700; color: #fff; }
+.memberRole { font-size: 13px; color: rgba(255,255,255,0.35); }
+.stack { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.6); padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 500; }
+.cta { text-align: center; padding: 48px 28px 80px; }
+.ctaBtn { background: #fff; color: #0a0a0f; border: none; padding: 16px 32px; border-radius: 14px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
