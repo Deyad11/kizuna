@@ -7,11 +7,11 @@ import { useQueue } from "@/lib/useQueue";
 import styles from "./chapter.module.css";
 import { getCovers } from "@/lib/anilistCache";
 const avatarImages = [
-  "https://s4.anilist.co/file/anilistcdn/character/large/b73935-GG1P3VnXjrGz.png",
-  "https://s4.anilist.co/file/anilistcdn/character/large/b40882-ZOC6vPpaG4D8.png",
-  "https://s4.anilist.co/file/anilistcdn/character/large/b127691-gW8Ljg8RFLgc.png",
-  "https://s4.anilist.co/file/anilistcdn/character/large/b40-JOxFpswA5N0r.png",
-  "https://s4.anilist.co/file/anilistcdn/character/large/b146033-kV3dy7GM2rTQ.png",
+  "/avatars/avatar-1.svg",
+  "/avatars/avatar-2.svg",
+  "/avatars/avatar-3.svg",
+  "/avatars/avatar-4.svg",
+  "/avatars/avatar-5.svg",
 ];
 
 const CHAPTER_DATA: Record<

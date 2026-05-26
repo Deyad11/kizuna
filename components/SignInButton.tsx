@@ -29,7 +29,7 @@ export default function SignInButton({
   return (
     <button className={className} onClick={signIn}>
       {text}
-      <span aria-hidden>→</span>
+      <span aria-hidden></span>
     </button>
   );
 }

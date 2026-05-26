@@ -23,11 +23,11 @@ interface ChapterDrop {
 }
 
 const avatarImages = [
-  "https://s4.anilist.co/file/anilistcdn/character/large/b73935-GG1P3VnXjrGz.png",
-  "https://s4.anilist.co/file/anilistcdn/character/large/b40882-ZOC6vPpaG4D8.png",
-  "https://s4.anilist.co/file/anilistcdn/character/large/b127691-gW8Ljg8RFLgc.png",
-  "https://s4.anilist.co/file/anilistcdn/character/large/b40-JOxFpswA5N0r.png",
-  "https://s4.anilist.co/file/anilistcdn/character/large/b146033-kV3dy7GM2rTQ.png",
+  "/avatars/avatar-1.svg",
+  "/avatars/avatar-2.svg",
+  "/avatars/avatar-3.svg",
+  "/avatars/avatar-4.svg",
+  "/avatars/avatar-5.svg",
 ];
 
 // const ANILIST_QUERY = `
@@ -244,7 +244,7 @@ export default function Home() {
                 className={styles.kzBtnSolid}
                 onClick={() => openChapter(liveDrop.id)}
               >
-                jump into a chapter
+                Get Started
               </button>
               <SignOutButton className={styles.kzBtnGhost} text="sign out" />
               <button
@@ -260,10 +260,10 @@ export default function Home() {
             </>
           ) : (
             <>
-              <SignInButton className={styles.kzBtnGhost} text="log in" />
+              <SignInButton className={styles.kzBtnGhost} text="Log in" />
               <SignInButton
                 className={styles.kzBtnSolid}
-                text="jump into a chapter"
+                text="Get Started"
               />
             </>
           )}
@@ -310,7 +310,7 @@ export default function Home() {
               className={styles.kzBtnPrimary}
               onClick={() => openChapter(liveDrop.id)}
             >
-              jump into a chapter <span aria-hidden></span>
+              Jump into a chapter <span aria-hidden></span>
             </button>
             <button
               className={styles.kzBtnText}
@@ -375,12 +375,12 @@ export default function Home() {
             <h2>Dropping this week</h2>{" "}
             <p>Catch the chapters everyone&apos;s reacting to.</p>
           </div>
-          <button
+          {/* <button
             className={styles.kzSeeAll}
             onClick={() => router.push("/releases")}
           >
             see full calendar <span aria-hidden></span>
-          </button>
+          </button> */}
         </div>
 
         <div className={styles.kzScrollRow}>
