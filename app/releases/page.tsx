@@ -190,8 +190,10 @@ export default function ReleasesPage() {
         <div className={styles.navLinks}>
           <button onClick={() => router.push("/")}>live now</button>
           <button className={styles.navActive}>calendar</button>
-          <button>how it works</button>
-          <button>about</button>
+          <button onClick={() => router.push("/how-it-works")}>
+            how it works
+          </button>
+          <button onClick={() => router.push("/about")}>about</button>
         </div>
         <div className={styles.navRight}>
           {/* <span className={styles.notifBtn}>🔔 notifications</span> */}
