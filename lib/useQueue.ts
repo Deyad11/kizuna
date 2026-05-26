@@ -109,6 +109,17 @@ socket.on('match:found', (payload: MatchPayload) => {
     setQueueDepth(0);
   }, []);
 
+const resetQueue = useCallback(() => {
+  if (socketRef.current) {
+    socketRef.current.disconnect();
+    socketRef.current = null;
+  }
+  setStatus('idle');
+  setMatch(null);
+  setMessages([]);
+  setQueueDepth(0);
+  setEndReason(null);
+}, []);
   const mySocketId = socketRef.current?.id ?? null;
 
   return {
@@ -121,6 +132,7 @@ socket.on('match:found', (payload: MatchPayload) => {
     sendMessage,
     skip,
     leaveQueue,
-    
+      resetQueue,   // ← ADD
+
   };
 }

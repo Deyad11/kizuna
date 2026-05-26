@@ -274,6 +274,7 @@ export default function ChapterPage() {
     sendMessage,
     skip,
     leaveQueue,
+    resetQueue, // ← ADD
   } = useQueue({
     userId,
     chapterId: id,
@@ -423,12 +424,17 @@ export default function ChapterPage() {
     setInputText("");
   };
 
+  // const handleSkip = () => {
+  //   skip();
+  //   setQueueEnabled(false);
+  //   setChatUnlocked(false);
+  // };
   const handleSkip = () => {
     skip();
-    setQueueEnabled(false);
+    // Don't setQueueEnabled(false) here — socket must stay alive
+    // to receive the chat:ended event that transitions status → "ended"
     setChatUnlocked(false);
   };
-
   const now = new Date();
   const dateStr = now.toLocaleDateString("en-US", {
     weekday: "long",
@@ -663,11 +669,20 @@ export default function ChapterPage() {
           </div>
 
           <div className={styles.postCtas}>
-            <button
+            {/* <button
               className={styles.postCtaPrimary}
               onClick={() => {
                 setQueueEnabled(false);
                 setTimeout(() => setQueueEnabled(true), 100);
+              }}
+            >
+              read another →
+            </button> */}
+            <button
+              className={styles.postCtaPrimary}
+              onClick={() => {
+                resetQueue();
+                setQueueEnabled(false);
               }}
             >
               read another →
@@ -683,7 +698,104 @@ export default function ChapterPage() {
       </div>
     );
   }
+  // ── RENDER: QUEUE SCREEN ──────────────────
+  if (status === "joining" || status === "queued") {
+    return (
+      <div className={styles.queuePage}>
+        <nav className={styles.queueNav}>
+          <div className={styles.kzLogo}>
+            <span>絆</span> kizuna
+          </div>
+          <button
+            className={styles.leaveQueue}
+            onClick={() => {
+              leaveQueue();
+              setQueueEnabled(false);
+            }}
+          >
+            leave queue
+          </button>
+        </nav>
 
+        <div className={styles.queueScreenBody}>
+          <div className={styles.queueRing}>
+            <svg viewBox="0 0 160 160" width="160" height="160">
+              <circle
+                cx="80"
+                cy="80"
+                r="68"
+                fill="none"
+                stroke="rgba(255,255,255,0.06)"
+                strokeWidth="6"
+              />
+              <circle
+                cx="80"
+                cy="80"
+                r="68"
+                fill="none"
+                stroke="url(#queueGrad)"
+                strokeWidth="6"
+                strokeLinecap="round"
+                strokeDasharray="320"
+                strokeDashoffset="80"
+                className={styles.queueArc}
+              />
+              <defs>
+                <linearGradient
+                  id="queueGrad"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop offset="0%" stopColor="#ec4899" />
+                  <stop offset="100%" stopColor="#6366f1" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <div className={styles.queueRingInner}>
+              <span className={styles.queueRingCount}>{queueDepth || "—"}</span>
+              <span className={styles.queueRingLabel}>IN QUEUE</span>
+            </div>
+          </div>
+
+          <div className={styles.queueChapterPill}>
+            {chapter.title} · Ch. {chapter.chapter}
+          </div>
+
+          <h2 className={styles.queueFindingText}>finding your match...</h2>
+          <p className={styles.queueFindingSub}>
+            Someone with overlapping taste is being located. Usually under 60
+            seconds.
+          </p>
+
+          <div className={styles.queueMatchRow}>
+            <div className={styles.queueMatchUser}>
+              <div
+                className={`${styles.queueMatchAvatar} ${styles.queueMatchAvatarYou}`}
+              >
+                you
+              </div>
+              <span className={styles.queueMatchAvatarLabel}>you</span>
+            </div>
+            <div className={styles.queueMatchDots}>
+              <span />
+              <span />
+              <span />
+            </div>
+            <div className={styles.queueMatchUser}>
+              <div
+                className={`${styles.queueMatchAvatar} ${styles.queueMatchAvatarThem}`}
+              >
+                ···
+              </div>
+              <span className={styles.queueMatchAvatarLabel}>matching</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
   // ── RENDER: CHAPTER LANDING PAGE ────────
   return (
     <main className={styles.page}>
@@ -835,7 +947,7 @@ export default function ChapterPage() {
             </>
           )}
 
-          {(status === "joining" || status === "queued") && (
+          {/* {(status === "joining" || status === "queued") && (
             <div className={styles.inQueueState}>
               <div className={styles.queueSpinner} />
               <div>
@@ -852,7 +964,7 @@ export default function ChapterPage() {
                 leave queue
               </button>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </main>
