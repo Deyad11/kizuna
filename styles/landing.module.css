@@ -624,7 +624,24 @@ align-items:flex-end;
 
 margin:90px 0 40px;
 }
+.kzCardDimmed {
+  opacity: 0.5;
+  filter: grayscale(40%);
+}
 
+.kzLiveBadge {
+  position: absolute;
+  top: 8px;
+right: 8px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 20px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
 .kzHowHeader h2{
 font-size:clamp(48px,5vw,76px);
 font-weight:800;

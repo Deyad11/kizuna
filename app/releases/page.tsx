@@ -3,72 +3,17 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import styles from "./releases.module.css";
-
+import { getCovers } from "@/lib/anilistCache";
+import CoverImage from "@/components/CoverImage";
 const RELEASES = [
-  {
-    id: "blue-lock",
-    title: "Blue Lock",
-    chapter: 346,
-    type: "manga",
-    day: "TUE",
-    time: "20:00 IST",
-    readers: 34,
-    live: true,
-    color: "#6366f1",
-    cover:
-      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx114745-yvD3e9G3FruQ.jpg",
-    genres: ["Sports", "Action"],
-  },
-  {
-    id: "jujutsu-kaisen",
-    title: "Jujutsu Kaisen",
-    chapter: 271,
-    type: "manga",
-    day: "SUN",
-    time: "10:00 IST",
-    readers: 67,
-    live: true,
-    color: "#ec4899",
-    cover:
-      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx101517-L2DF9rL0SkVl.jpg",
-    genres: ["Action", "Supernatural"],
-  },
-  {
-    id: "one-piece",
-    title: "One Piece",
-    chapter: 1183,
-    type: "manga",
-    day: "SUN",
-    time: "10:00 IST",
-    readers: 27,
-    live: true,
-    color: "#f59e0b",
-    cover:
-      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx30013-RKhL3jK5TTVM.jpg",
-    genres: ["Action", "Adventure"],
-  },
-  {
-    id: "tower-of-god",
-    title: "Tower of God",
-    chapter: 625,
-    type: "webtoon",
-    day: "SUN",
-    time: "11:00 IST",
-    readers: 44,
-    live: true,
-    color: "#34d399",
-    cover:
-      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx85143-8bztHkqSSB4m.jpg",
-    genres: ["Action", "Fantasy"],
-  },
   {
     id: "dandadan",
     title: "Dandadan",
-    chapter: 234,
+    chapter: 235,
     type: "manga",
     day: "MON",
-    time: "10:00 IST",
-    readers: 70,
+    time: "11:00 IST",
+    readers: 34,
     live: true,
     color: "#f97316",
     cover:
@@ -76,11 +21,40 @@ const RELEASES = [
     genres: ["Action", "Romance"],
   },
   {
+    id: "eleceed",
+    title: "Eleceed",
+    chapter: 400,
+    type: "manhwa",
+    day: "TUE",
+    time: "12:00 IST",
+    readers: 28,
+    live: true,
+    color: "#60a5fa",
+    cover:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx107759-iHCDkRC6RgzB.jpg",
+
+    genres: ["Action", "Fantasy"],
+  },
+  {
+    id: "blue-lock",
+    title: "Blue Lock",
+    chapter: 347,
+    type: "manga",
+    day: "TUE",
+    time: "20:30 IST",
+    readers: 61,
+    live: true,
+    color: "#6366f1",
+    cover:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx114745-yvD3e9G3FruQ.jpg",
+    genres: ["Sports", "Action"],
+  },
+  {
     id: "frieren",
     title: "Frieren",
-    chapter: 135,
+    chapter: 145,
     type: "manga",
-    day: "FRI",
+    day: "WED",
     time: "10:00 IST",
     readers: 0,
     live: false,
@@ -90,25 +64,11 @@ const RELEASES = [
     genres: ["Fantasy", "Slice of Life"],
   },
   {
-    id: "solo-leveling",
-    title: "Solo Leveling: Ragnarok",
-    chapter: 52,
-    type: "manhwa",
-    day: "WED",
-    time: "13:00 IST",
-    readers: 0,
-    live: false,
-    color: "#60a5fa",
-    cover:
-      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx138494-sjDgNviTiJbE.jpg",
-    genres: ["Action", "Fantasy"],
-  },
-  {
     id: "omniscient-reader",
     title: "Omniscient Reader",
-    chapter: 306,
+    chapter: 310,
     type: "manhwa",
-    day: "FRI",
+    day: "WED",
     time: "13:00 IST",
     readers: 0,
     live: false,
@@ -118,32 +78,75 @@ const RELEASES = [
     genres: ["Action", "Fantasy"],
   },
   {
-    id: "oshi-no-ko",
-    title: "Oshi no Ko",
-    chapter: 166,
-    type: "manga",
-    day: "WED",
-    time: "10:00 IST",
-    readers: 0,
-    live: false,
-    color: "#e879f9",
-    cover:
-      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx127720-7PT5e7sPLsFk.jpg",
-    genres: ["Drama", "Mystery"],
-  },
-  {
-    id: "one-punch-man",
-    title: "One Punch Man",
-    chapter: 230,
-    type: "manga",
+    id: "lookism",
+    title: "Lookism",
+    chapter: 600,
+    type: "manhwa",
     day: "THU",
     time: "12:00 IST",
     readers: 0,
     live: false,
+    color: "#34d399",
+    cover:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx85222-RkpEqBpGAZvk.jpg",
+    genres: ["Slice of Life", "Action"],
+  },
+  {
+    id: "kaiju-no-8",
+    title: "Kaiju No. 8",
+    chapter: 157,
+    type: "manga",
+    day: "THU",
+    time: "10:00 IST",
+    readers: 0,
+    live: false,
+    color: "#ec4899",
+    cover:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx86635-UxakUQWobvOd.jpg",
+
+    genres: ["Action", "Sci-Fi"],
+  },
+  {
+    id: "one-piece",
+    title: "One Piece",
+    chapter: 1183,
+    type: "manga",
+    day: "SUN",
+    time: "10:30 IST",
+    readers: 0,
+    live: false,
+    color: "#f59e0b",
+    cover:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx30013-RKhL3jK5TTVM.jpg",
+    genres: ["Action", "Adventure"],
+  },
+  {
+    id: "sakamoto-days",
+    title: "Sakamoto Days",
+    chapter: 260,
+    type: "manga",
+    day: "SUN",
+    time: "10:30 IST",
+    readers: 0,
+    live: false,
     color: "#facc15",
     cover:
-      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx85216-RGk9yUKWOIbL.jpg",
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx132588-TuFt2bVGCxTl.jpg",
     genres: ["Action", "Comedy"],
+  },
+  {
+    id: "kagurabachi",
+    title: "Kagurabachi",
+    chapter: 122,
+    type: "manga",
+    day: "SUN",
+    time: "10:30 IST",
+    readers: 0,
+    live: false,
+    color: "#fb7185",
+    cover:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx167898-U1GRpJBRbvnK.jpg",
+    genres: ["Action", "Fantasy"],
   },
 ];
 
@@ -152,34 +155,36 @@ const DAYS = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 export default function ReleasesPage() {
   const [covers, setCovers] = useState<Record<string, string>>({});
 
-  useEffect(() => {
-    const titles = RELEASES.map((r) => r.title);
-    Promise.all(
-      titles.map(async (title) => {
-        const res = await fetch("https://graphql.anilist.co", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            query: `query($s:String){Page(perPage:1){media(search:$s,sort:POPULARITY_DESC){title{romaji}coverImage{extraLarge}}}}`,
-            variables: { s: title },
-          }),
-        });
-        const data = await res.json();
-        const img = data.data?.Page?.media?.[0]?.coverImage?.extraLarge;
-        return { title, img };
-      }),
-    ).then((results) => {
-      const map: Record<string, string> = {};
-      results.forEach(({ title, img }) => {
-        if (img) map[title] = img;
-      });
-      setCovers(map);
-    });
-  }, []);
+  //   useEffect(() => {
+  //     const titles = RELEASES.map((r) => r.title);
+  //     Promise.all(
+  //       titles.map(async (title) => {
+  //         const res = await fetch("https://graphql.anilist.co", {
+  //           method: "POST",
+  //           headers: { "Content-Type": "application/json" },
+  //           body: JSON.stringify({
+  //             query: `query($s:String){Page(perPage:1){media(search:$s,sort:POPULARITY_DESC){title{romaji}coverImage{extraLarge}}}}`,
+  //             variables: { s: title },
+  //           }),
+  //         });
+  //         const data = await res.json();
+  //         const img = data.data?.Page?.media?.[0]?.coverImage?.extraLarge;
+  //         return { title, img };
+  //       }),
+  //     ).then((results) => {
+  //       const map: Record<string, string> = {};
+  //       results.forEach(({ title, img }) => {
+  //         if (img) map[title] = img;
+  //       });
+  //       setCovers(map);
+  //     });
+  //   }, []);
   const router = useRouter();
   const liveReleases = RELEASES.filter((r) => r.live);
   const upcoming = RELEASES.filter((r) => !r.live);
-
+  useEffect(() => {
+    getCovers(RELEASES.map((r) => r.title)).then(setCovers);
+  }, []);
   return (
     <div className={styles.page}>
       {/* Nav */}
@@ -205,7 +210,8 @@ export default function ReleasesPage() {
         <div>
           <h1 className={styles.heading}>Release Calendar</h1>
           <p className={styles.headingSub}>
-            20 series tracked · {liveReleases.length} dropping this week
+            {RELEASES.length} series tracked · {liveReleases.length} dropping
+            today
           </p>
         </div>
         <span className={styles.tz}>Times shown in IST</span>
@@ -219,7 +225,7 @@ export default function ReleasesPage() {
             className={`${styles.dayCell} ${day === "TUE" ? styles.dayCellActive : ""}`}
           >
             <span className={styles.dayLabel}>{day}</span>
-            <span className={styles.dayNum}>{19 + i}</span>
+            <span className={styles.dayNum}>{24 + i}</span>
             {RELEASES.some((r) => r.day === day) && (
               <span className={styles.dayDot} />
             )}
@@ -243,9 +249,14 @@ export default function ReleasesPage() {
               className={styles.liveCard}
               onClick={() => router.push(`/chapter/${r.id}`)}
             >
-              <img
+              {/* <img
                 src={covers[r.title] || r.cover}
                 alt={r.title}
+                className={styles.liveCardImg}
+              /> */}
+              <CoverImage
+                src={covers[r.title]}
+                title={r.title}
                 className={styles.liveCardImg}
               />
               <div className={styles.liveCardOverlay} />
@@ -277,9 +288,14 @@ export default function ReleasesPage() {
         <div className={styles.upcomingList}>
           {upcoming.map((r) => (
             <div key={r.id} className={styles.upcomingRow}>
-              <img
+              {/* <img
                 src={covers[r.title] || r.cover}
                 alt={r.title}
+                className={styles.upcomingCover}
+              /> */}
+              <CoverImage
+                src={covers[r.title]}
+                title={r.title}
                 className={styles.upcomingCover}
               />
               <div className={styles.upcomingInfo}>

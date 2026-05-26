@@ -5,7 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useQueue } from "@/lib/useQueue";
 import styles from "./chapter.module.css";
-
+import { getCovers } from "@/lib/anilistCache";
 const avatarImages = [
   "https://s4.anilist.co/file/anilistcdn/character/large/b73935-GG1P3VnXjrGz.png",
   "https://s4.anilist.co/file/anilistcdn/character/large/b40882-ZOC6vPpaG4D8.png",
@@ -118,15 +118,127 @@ const CHAPTER_DATA: Record<
     activityLevel: "high",
     searchTitle: "Dandadan",
   },
+  eleceed: {
+    title: "Eleceed",
+    chapter: 400,
+    type: "Manhwa",
+    genres: ["Action", "Fantasy"],
+    droppedMinutesAgo: 20,
+    coverImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx107759-iHCDkRC6RgzB.jpg",
+    bannerImage: "",
+    peakMinutesLeft: 25,
+    avgWait: "< 60s",
+    readers: 28,
+    readerNames: ["Jiwoo", "Kayden", "Inhyuk"],
+    activityLevel: "medium",
+    searchTitle: "Eleceed",
+  },
+  "sakamoto-days": {
+    title: "Sakamoto Days",
+    chapter: 260,
+    type: "Manga",
+    genres: ["Action", "Comedy"],
+    droppedMinutesAgo: 18,
+    coverImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx132588-TuFt2bVGCxTl.jpg",
+    bannerImage: "",
+    peakMinutesLeft: 30,
+    avgWait: "< 45s",
+    readers: 22,
+    readerNames: ["Taro", "Shin", "Nagumo"],
+    activityLevel: "medium",
+    searchTitle: "Sakamoto Days",
+  },
+  kagurabachi: {
+    title: "Kagurabachi",
+    chapter: 122,
+    type: "Manga",
+    genres: ["Action", "Fantasy"],
+    droppedMinutesAgo: 25,
+    coverImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx167898-U1GRpJBRbvnK.jpg",
+    bannerImage: "",
+    peakMinutesLeft: 20,
+    avgWait: "< 60s",
+    readers: 19,
+    readerNames: ["Chihiro", "Hakuri", "Char"],
+    activityLevel: "medium",
+    searchTitle: "Kagurabachi",
+  },
+  lookism: {
+    title: "Lookism",
+    chapter: 600,
+    type: "Manhwa",
+    genres: ["Slice of Life", "Action"],
+    droppedMinutesAgo: 40,
+    coverImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx86635-UxakUQWobvOd.jpg",
+    bannerImage: "",
+    peakMinutesLeft: 15,
+    avgWait: "< 90s",
+    readers: 31,
+    readerNames: ["Daniel", "Vasco", "Jay"],
+    activityLevel: "medium",
+    searchTitle: "Lookism",
+  },
+  "kaiju-no-8": {
+    title: "Kaiju No. 8",
+    chapter: 157,
+    type: "Manga",
+    genres: ["Action", "Sci-Fi"],
+    droppedMinutesAgo: 55,
+    coverImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx132196-0GBqFsUCv0Bm.jpg",
+    bannerImage: "",
+    peakMinutesLeft: 10,
+    avgWait: "< 75s",
+    readers: 24,
+    readerNames: ["Kafka", "Mina", "Reno"],
+    activityLevel: "low",
+    searchTitle: "Kafka on the Shore",
+  },
+  frieren: {
+    title: "Frieren",
+    chapter: 145,
+    type: "Manga",
+    genres: ["Fantasy", "Slice of Life"],
+    droppedMinutesAgo: 30,
+    coverImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx127230-flE5ik5cEMjn.jpg",
+    bannerImage: "",
+    peakMinutesLeft: 18,
+    avgWait: "< 60s",
+    readers: 38,
+    readerNames: ["Frieren", "Fern", "Stark"],
+    activityLevel: "medium",
+    searchTitle: "Frieren: Beyond Journey's End",
+  },
+  "omniscient-reader": {
+    title: "Omniscient Reader",
+    chapter: 310,
+    type: "Manhwa",
+    genres: ["Action", "Fantasy"],
+    droppedMinutesAgo: 22,
+    coverImage:
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx138307-pkpKAArNc9H4.jpg",
+    bannerImage: "",
+    peakMinutesLeft: 22,
+    avgWait: "< 50s",
+    readers: 45,
+    readerNames: ["Dokja", "Joonghyuk", "Yoosung"],
+    activityLevel: "high",
+    searchTitle: "Omniscient Reader's Viewpoint",
+  },
 };
 
-const ANILIST_QUERY = `query ($search: String) {
-  Page(perPage: 1) {
-    media(search: $search, type: MANGA, sort: POPULARITY_DESC) {
-      bannerImage coverImage { extraLarge large }
-    }
-  }
-}`;
+// const ANILIST_QUERY = `query ($search: String) {
+//   Page(perPage: 1) {
+//     media(search: $search, type: MANGA, sort: POPULARITY_DESC) {
+//       bannerImage coverImage { extraLarge large }
+//     }
+//   }
+// }`;
 
 export default function ChapterPage() {
   const router = useRouter();
@@ -203,26 +315,35 @@ export default function ChapterPage() {
   }, [chapter, queueDepth]);
 
   // ── ANILIST ARTWORK ──
+  // useEffect(() => {
+  //   if (!chapter) return;
+  //   fetch("https://graphql.anilist.co", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({
+  //       query: ANILIST_QUERY,
+  //       variables: { search: chapter.searchTitle },
+  //     }),
+  //   })
+  //     .then((r) => r.json())
+  //     .then((data) => {
+  //       const media = data.data?.Page?.media?.[0];
+  //       if (media?.bannerImage) setBannerImage(media.bannerImage);
+  //       else if (media?.coverImage?.extraLarge)
+  //         setBannerImage(media.coverImage.extraLarge);
+  //     })
+  //     .catch(() => {});
+  // }, [chapter]);
   useEffect(() => {
     if (!chapter) return;
-    fetch("https://graphql.anilist.co", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        query: ANILIST_QUERY,
-        variables: { search: chapter.searchTitle },
-      }),
-    })
-      .then((r) => r.json())
-      .then((data) => {
-        const media = data.data?.Page?.media?.[0];
-        if (media?.bannerImage) setBannerImage(media.bannerImage);
-        else if (media?.coverImage?.extraLarge)
-          setBannerImage(media.coverImage.extraLarge);
-      })
-      .catch(() => {});
-  }, [chapter]);
 
+    getCovers([chapter.searchTitle]).then((covers) => {
+      const url = covers[chapter.searchTitle];
+      if (url) {
+        setBannerImage(url);
+      }
+    });
+  }, [chapter]);
   // ── SCENE REVEAL COUNTDOWN ──
   useEffect(() => {
     if (status !== "matched") return;

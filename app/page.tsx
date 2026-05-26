@@ -8,7 +8,7 @@ import SignInButton from "@/components/SignInButton";
 import SignOutButton from "@/components/SignOutButton";
 
 import { createClient } from "@/lib/supabase/client";
-
+import { getCovers } from "@/lib/anilistCache";
 interface ChapterDrop {
   id: string;
   title: string;
@@ -19,6 +19,7 @@ interface ChapterDrop {
   coverImage: string;
   bannerImage?: string;
   quote?: string;
+  live?: boolean;
 }
 
 const avatarImages = [
@@ -29,74 +30,77 @@ const avatarImages = [
   "https://s4.anilist.co/file/anilistcdn/character/large/b146033-kV3dy7GM2rTQ.png",
 ];
 
-const ANILIST_QUERY = `
-  query ($search: String) {
-    Page(perPage: 1) {
-      media(search: $search, type: MANGA, sort: POPULARITY_DESC) {
-        id
-        title {
-          romaji
-          english
-        }
-        coverImage {
-          extraLarge
-          large
-        }
-        bannerImage
-      }
-    }
-  }
-`;
+// const ANILIST_QUERY = `
+//   query ($search: String) {
+//     Page(perPage: 1) {
+//       media(search: $search, type: MANGA, sort: POPULARITY_DESC) {
+//         id
+//         title {
+//           romaji
+//           english
+//         }
+//         coverImage {
+//           extraLarge
+//           large
+//         }
+//         bannerImage
+//       }
+//     }
+//   }
+// `;
 
-async function fetchAniListArtwork(drop: ChapterDrop): Promise<ChapterDrop> {
-  try {
-    const response = await fetch("https://graphql.anilist.co", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        query: ANILIST_QUERY,
-        variables: { search: drop.searchTitle },
-      }),
-    });
+// async function fetchAniListArtwork(drop: ChapterDrop): Promise<ChapterDrop> {
+//   try {
+//     const response = await fetch("https://graphql.anilist.co", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({
+//         query: ANILIST_QUERY,
+//         variables: { search: drop.searchTitle },
+//       }),
+//     });
 
-    if (!response.ok) return drop;
+//     if (!response.ok) return drop;
 
-    const data = await response.json();
-    const media = data.data?.Page?.media?.[0];
+//     const data = await response.json();
+//     const media = data.data?.Page?.media?.[0];
 
-    return {
-      ...drop,
-      coverImage:
-        media?.coverImage?.extraLarge ||
-        media?.coverImage?.large ||
-        drop.coverImage,
-      bannerImage: media?.bannerImage || drop.bannerImage,
-    };
-  } catch {
-    return drop;
-  }
-}
+//     return {
+//       ...drop,
+//       coverImage:
+//         media?.coverImage?.extraLarge ||
+//         media?.coverImage?.large ||
+//         drop.coverImage,
+//       bannerImage: media?.bannerImage || drop.bannerImage,
+//     };
+//   } catch {
+//     return drop;
+//   }
+// }
 
 const fallbackChapterDrops: ChapterDrop[] = [
   {
     id: "blue-lock",
     title: "Blue Lock",
     searchTitle: "Blue Lock",
-    chapter: 346,
+    chapter: 347,
     type: "manga",
-    readers: 18,
+    readers: 61,
+    live: true,
     coverImage:
       "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx114745-yvD3e9G3FruQ.jpg",
   },
   {
-    id: "jujutsu-kaisen",
-    title: "Jujutsu Kaisen",
-    searchTitle: "Jujutsu Kaisen",
-    chapter: 271,
+    id: "dandadan",
+    title: "Dandadan",
+    searchTitle: "Dandadan",
+    chapter: 235,
     type: "manga",
-    readers: 67,
+    readers: 34,
+    live: true,
+    quote: "that ending was insane",
     coverImage:
-      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx101517-L2DF9rL0SkVl.jpg",
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx132029-mAXeRZn5V6Rg.jpg",
   },
   {
     id: "one-piece",
@@ -109,31 +113,36 @@ const fallbackChapterDrops: ChapterDrop[] = [
       "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx30013-RKhL3jK5TTVM.jpg",
   },
   {
-    id: "tower-of-god",
-    title: "Tower of God",
-    searchTitle: "Tower of God",
-    chapter: 625,
-    type: "webtoon",
-    readers: 44,
+    id: "sakamoto-days",
+    title: "Sakamoto Days",
+    searchTitle: "Sakamoto Days",
+    chapter: 260,
+    type: "manga",
+    readers: 22,
+    quote: "bro really retired just to end up here",
     coverImage:
-      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx85143-8bztHkqSSB4m.jpg",
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx132588-TuFt2bVGCxTl.jpg",
   },
   {
-    id: "dandadan",
-    title: "Dandadan",
-    searchTitle: "Dandadan",
-    chapter: 234,
+    id: "kagurabachi",
+    title: "Kagurabachi",
+    searchTitle: "Kagurabachi",
+    chapter: 122,
     type: "manga",
-    readers: 70,
-    quote: "that ending was insane",
+    readers: 19,
     coverImage:
-      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx132029-mAXeRZn5V6Rg.jpg",
+      "https://s4.anilist.co/file/anilistcdn/media/manga/cover/large/bx167898-U1GRpJBRbvnK.jpg",
   },
 ];
 
 export default function Home() {
   const router = useRouter();
-  const [chapterDrops, setChapterDrops] = useState(fallbackChapterDrops);
+  // const [chapterDrops, setChapterDrops] = useState(fallbackChapterDrops);
+  const [covers, setCovers] = useState<Record<string, string>>({});
+  const chapterDrops = fallbackChapterDrops.map((d) => ({
+    ...d,
+    coverImage: covers[d.searchTitle] ?? d.coverImage,
+  }));
   const [liveIndex, setLiveIndex] = useState(fallbackChapterDrops.length - 1);
   const [user, setUser] = useState<User | null>(null);
   const liveDrop = chapterDrops[liveIndex] || chapterDrops[0];
@@ -165,23 +174,25 @@ export default function Home() {
     };
   }, []);
 
+  // useEffect(() => {
+  //   let mounted = true;
+
+  //   const loadArtwork = async () => {
+  //     const dropsWithArtwork = await Promise.all(
+  //       fallbackChapterDrops.map(fetchAniListArtwork),
+  //     );
+  //     if (mounted) setChapterDrops(dropsWithArtwork);
+  //   };
+
+  //   loadArtwork();
+
+  //   return () => {
+  //     mounted = false;
+  //   };
+  // }, []);
   useEffect(() => {
-    let mounted = true;
-
-    const loadArtwork = async () => {
-      const dropsWithArtwork = await Promise.all(
-        fallbackChapterDrops.map(fetchAniListArtwork),
-      );
-      if (mounted) setChapterDrops(dropsWithArtwork);
-    };
-
-    loadArtwork();
-
-    return () => {
-      mounted = false;
-    };
+    getCovers(fallbackChapterDrops.map((d) => d.searchTitle)).then(setCovers);
   }, []);
-
   useEffect(() => {
     if (chapterDrops.length === 0) return;
 
@@ -361,7 +372,7 @@ export default function Home() {
         <div className={styles.kzSectionHeader}>
           <div className={styles.kzSectionTitle}>
             <span aria-hidden>♦</span>
-            <h2>Dropping today</h2>
+            <h2>Dropping this week</h2>{" "}
             <p>Catch the chapters everyone&apos;s reacting to.</p>
           </div>
           <button
@@ -376,14 +387,18 @@ export default function Home() {
           {chapterDrops.map((drop, index) => (
             <button
               key={drop.id}
-              className={styles.kzCard}
-              onClick={() => openChapter(drop.id)}
+              className={`${styles.kzCard} ${!drop.live ? styles.kzCardDimmed : ""}`}
+              onClick={() => (drop.live ? openChapter(drop.id) : null)}
+              style={{ cursor: drop.live ? "pointer" : "default" }}
             >
               <span
                 className={styles.kzCardArt}
                 style={{ backgroundImage: `url(${drop.coverImage})` }}
               >
                 <span className={styles.kzCardArtOverlay} />
+                {drop.live && (
+                  <span className={styles.kzLiveBadge}>• live</span>
+                )}
                 <span className={styles.kzCardArtBadge}>{drop.type}</span>
                 <span className={styles.kzCardName}>{drop.title}</span>
                 <span className={styles.kzCardChapLabel}>
@@ -392,8 +407,14 @@ export default function Home() {
               </span>
               <span className={styles.kzCardMeta}>
                 <span>
-                  <span className={styles.kzRdot} aria-hidden />
-                  {drop.readers} reading now
+                  {drop.live ? (
+                    <>
+                      <span className={styles.kzRdot} aria-hidden />
+                      {drop.readers} reading now
+                    </>
+                  ) : (
+                    <>drops this week</>
+                  )}
                 </span>
                 <span className={styles.kzCardAvatars} aria-hidden>
                   {avatarImages
@@ -414,7 +435,7 @@ export default function Home() {
             className={styles.kzMoreCard}
             onClick={() => router.push("/releases")}
           >
-            <strong>+12</strong>
+            <strong>+{Math.max(0, 10 - fallbackChapterDrops.length)}</strong>
             <span>more chapters</span>
             <small>see calendar →</small>
           </button>
