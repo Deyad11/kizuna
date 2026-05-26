@@ -6,8 +6,6 @@ import { createClient } from "@/lib/supabase/client";
 import { useQueue } from "@/lib/useQueue";
 import styles from "./chapter.module.css";
 
-// ── STATIC DATA ────────────────────────────────────────────────────
-
 const avatarImages = [
   "https://s4.anilist.co/file/anilistcdn/character/large/b73935-GG1P3VnXjrGz.png",
   "https://s4.anilist.co/file/anilistcdn/character/large/b40882-ZOC6vPpaG4D8.png",
@@ -130,8 +128,6 @@ const ANILIST_QUERY = `query ($search: String) {
   }
 }`;
 
-// ── COMPONENT ──────────────────────────────────────────────────────
-
 export default function ChapterPage() {
   const router = useRouter();
   const params = useParams();
@@ -144,24 +140,18 @@ export default function ChapterPage() {
   const [readers, setReaders] = useState(chapter?.readers ?? 0);
   const [mounted, setMounted] = useState(false);
 
-  // Auth + interests
   const [userId, setUserId] = useState("");
   const [titleIds, setTitleIds] = useState<number[]>([]);
   const [authReady, setAuthReady] = useState(false);
-
-  // Queue is enabled when user clicks "I just read it"
   const [queueEnabled, setQueueEnabled] = useState(false);
 
-  // Scene reveal countdown
   const [revealCountdown, setRevealCountdown] = useState(5);
   const [chatUnlocked, setChatUnlocked] = useState(false);
   const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Chat input
   const [inputText, setInputText] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // ── SOCKET QUEUE HOOK ──
   const {
     status,
     match,
@@ -183,7 +173,6 @@ export default function ChapterPage() {
   useEffect(() => {
     setMounted(true);
     const supabase = createClient();
-
     supabase.auth.getUser().then(async ({ data }) => {
       const user = data.user;
       if (user) {
@@ -194,7 +183,6 @@ export default function ChapterPage() {
           .eq("user_id", user.id);
         setTitleIds(interests?.map((i: any) => i.title_id) ?? []);
       } else {
-        // Anonymous — use socket id placeholder, no interests
         setUserId(`anon_${Math.random().toString(36).slice(2, 10)}`);
       }
       setAuthReady(true);
@@ -204,7 +192,6 @@ export default function ChapterPage() {
   // ── FAKE READER COUNT ──
   useEffect(() => {
     if (!chapter) return;
-    // Reflect real queue depth when available, otherwise drift
     if (queueDepth > 0) {
       setReaders(queueDepth);
       return;
@@ -236,12 +223,11 @@ export default function ChapterPage() {
       .catch(() => {});
   }, [chapter]);
 
-  // ── SCENE REVEAL COUNTDOWN ── triggers when matched
+  // ── SCENE REVEAL COUNTDOWN ──
   useEffect(() => {
     if (status !== "matched") return;
     setRevealCountdown(5);
     setChatUnlocked(false);
-
     countdownRef.current = setInterval(() => {
       setRevealCountdown((prev) => {
         if (prev <= 1) {
@@ -252,7 +238,6 @@ export default function ChapterPage() {
         return prev - 1;
       });
     }, 1000);
-
     return () => {
       if (countdownRef.current) clearInterval(countdownRef.current);
     };
@@ -262,6 +247,48 @@ export default function ChapterPage() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  // ── WRITE TASTE PROFILE ON SESSION END ──
+  useEffect(() => {
+    if (status !== "ended") return;
+    if (!userId || userId.startsWith("anon_")) return;
+    if (!chapter) return;
+
+    const supabase = createClient();
+    const sessionDuration = match
+      ? Math.floor((Date.now() - (match.matchedAt || Date.now())) / 1000)
+      : 0;
+    const isGoodSession = sessionDuration > 60;
+
+    const updateProfile = async () => {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("taste_weights, favorite_titles")
+        .eq("id", userId)
+        .single();
+
+      const existingWeights: Record<string, number> =
+        (profile?.taste_weights as Record<string, number>) ?? {};
+      const existingTitles: string[] =
+        (profile?.favorite_titles as string[]) ?? [];
+
+      const newWeights = { ...existingWeights };
+      chapter.genres.forEach((genre) => {
+        newWeights[genre] = (newWeights[genre] ?? 0) + (isGoodSession ? 12 : 4);
+      });
+
+      const newTitles = existingTitles.includes(chapter.title)
+        ? existingTitles
+        : [...existingTitles, chapter.title];
+
+      await supabase
+        .from("profiles")
+        .update({ taste_weights: newWeights, favorite_titles: newTitles })
+        .eq("id", userId);
+    };
+
+    updateProfile();
+  }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleJoinQueue = () => {
     if (!authReady) return;
@@ -311,7 +338,6 @@ export default function ChapterPage() {
   if (status === "matched") {
     return (
       <div className={styles.chatPage}>
-        {/* Scene reveal overlay */}
         {!chatUnlocked && (
           <div className={styles.sceneReveal}>
             <div
@@ -334,11 +360,9 @@ export default function ChapterPage() {
           </div>
         )}
 
-        {/* Chat UI */}
         <div
           className={`${styles.chatWrap} ${chatUnlocked ? styles.chatVisible : styles.chatHidden}`}
         >
-          {/* Chat header */}
           <div className={styles.chatHeader}>
             <button
               className={styles.chatBack}
@@ -359,7 +383,6 @@ export default function ChapterPage() {
             </button>
           </div>
 
-          {/* Messages */}
           <div className={styles.messagesFeed}>
             {messages.length === 0 && chatUnlocked && (
               <div className={styles.chatOpener}>
@@ -373,7 +396,6 @@ export default function ChapterPage() {
                 </p>
               </div>
             )}
-
             {messages.map((msg, i) => {
               const isMe = msg.from === mySocketId;
               return (
@@ -388,7 +410,6 @@ export default function ChapterPage() {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input */}
           <div className={styles.chatInputRow}>
             <input
               className={styles.chatInput}
@@ -419,7 +440,6 @@ export default function ChapterPage() {
   }
 
   // ── RENDER: SESSION ENDED ────────────────
-  // ── RENDER: SESSION ENDED ────────────────
   if (status === "ended") {
     const sessionDuration = match
       ? Math.floor((Date.now() - (match.matchedAt || Date.now())) / 1000)
@@ -427,32 +447,30 @@ export default function ChapterPage() {
     const minutes = Math.floor(sessionDuration / 60);
     const seconds = sessionDuration % 60;
     const durationStr = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+    const isGoodSession = sessionDuration > 60;
 
     const tasteUpdates = [
       {
         title: chapter.title,
         tag: chapter.genres[0],
-        delta: "+12 pts",
+        delta: `+${isGoodSession ? 12 : 4} pts`,
         up: true,
       },
-      {
-        title: chapter.genres[1] || "action manga",
-        tag: "genre",
-        delta: "+4 pts",
-        up: true,
-      },
-      {
-        title: "tactical narratives",
-        tag: "new tag",
-        delta: "new tag",
-        up: true,
-      },
+      ...(chapter.genres[1]
+        ? [
+            {
+              title: chapter.genres[1],
+              tag: "genre",
+              delta: `+${isGoodSession ? 8 : 3} pts`,
+              up: true,
+            },
+          ]
+        : []),
     ];
 
     return (
       <div className={styles.postPage}>
         <div className={styles.postCard}>
-          {/* Header */}
           <div className={styles.postHeader}>
             <div className={styles.postHeaderBadge}>SESSION COMPLETE</div>
             <h1 className={styles.postHeadline}>
@@ -465,14 +483,12 @@ export default function ChapterPage() {
             </p>
           </div>
 
-          {/* Session pill */}
           <div className={styles.postSessionPill}>
             <span className={styles.postLiveDot} />
             {minutes > 0 ? durationStr : "quick match"} · {chapter.title} Ch.
             {chapter.chapter}
           </div>
 
-          {/* Stats row */}
           <div className={styles.postStatsRow}>
             <div className={styles.postStat}>
               <span className={styles.postStatValue}>
@@ -494,7 +510,6 @@ export default function ChapterPage() {
             </div>
           </div>
 
-          {/* Taste profile updated */}
           <div className={styles.postProfileSection}>
             <div className={styles.postProfileHeader}>
               <span className={styles.postProfileLabel}>
@@ -507,10 +522,7 @@ export default function ChapterPage() {
                   <div className={styles.postProfileLeft}>
                     <div
                       className={styles.postProfileDot}
-                      style={{
-                        background:
-                          i === 0 ? "#6366f1" : i === 1 ? "#ec4899" : "#34d399",
-                      }}
+                      style={{ background: i === 0 ? "#6366f1" : "#ec4899" }}
                     />
                     <div>
                       <div className={styles.postProfileTitle}>
@@ -520,7 +532,7 @@ export default function ChapterPage() {
                     </div>
                   </div>
                   <div
-                    className={`${styles.postProfileDelta} ${item.up ? styles.deltaUp : styles.deltaDown}`}
+                    className={`${styles.postProfileDelta} ${styles.deltaUp}`}
                   >
                     ↑ {item.delta}
                   </div>
@@ -529,7 +541,6 @@ export default function ChapterPage() {
             </div>
           </div>
 
-          {/* CTAs */}
           <div className={styles.postCtas}>
             <button
               className={styles.postCtaPrimary}
@@ -555,7 +566,6 @@ export default function ChapterPage() {
   // ── RENDER: CHAPTER LANDING PAGE ────────
   return (
     <main className={styles.page}>
-      {/* Banner */}
       <div className={styles.banner}>
         <div
           className={styles.bannerImg}
@@ -587,7 +597,6 @@ export default function ChapterPage() {
         </div>
       </div>
 
-      {/* Stats */}
       <div className={styles.statsRow}>
         <div className={styles.statCard}>
           <svg
@@ -646,7 +655,6 @@ export default function ChapterPage() {
         </div>
       </div>
 
-      {/* Queue Panel */}
       <div className={styles.queuePanel}>
         <div className={styles.queueTop}>
           <span className={styles.queueLabel}>READERS IN QUEUE</span>
@@ -690,7 +698,6 @@ export default function ChapterPage() {
           />
         </div>
 
-        {/* CTAs */}
         <div className={styles.ctaStack}>
           {status === "idle" && (
             <>
