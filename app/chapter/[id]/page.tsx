@@ -260,7 +260,9 @@ export default function ChapterPage() {
   const [revealCountdown, setRevealCountdown] = useState(5);
   const [chatUnlocked, setChatUnlocked] = useState(false);
   const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
+  const [sessionTodayCount, setSessionTodayCount] = useState<number | null>(
+    null,
+  );
   const [inputText, setInputText] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -371,6 +373,47 @@ export default function ChapterPage() {
   }, [messages]);
 
   // ── WRITE TASTE PROFILE ON SESSION END ──
+  // useEffect(() => {
+  //   if (status !== "ended") return;
+  //   if (!userId || userId.startsWith("anon_")) return;
+  //   if (!chapter) return;
+
+  //   const supabase = createClient();
+  //   const sessionDuration = match
+  //     ? Math.floor((Date.now() - (match.matchedAt || Date.now())) / 1000)
+  //     : 0;
+  //   const isGoodSession = sessionDuration > 60;
+
+  //   const updateProfile = async () => {
+  //     const { data: profile } = await supabase
+  //       .from("profiles")
+  //       .select("taste_weights, favorite_titles")
+  //       .eq("id", userId)
+  //       .single();
+
+  //     const existingWeights: Record<string, number> =
+  //       (profile?.taste_weights as Record<string, number>) ?? {};
+  //     const existingTitles: string[] =
+  //       (profile?.favorite_titles as string[]) ?? [];
+
+  //     const newWeights = { ...existingWeights };
+  //     chapter.genres.forEach((genre) => {
+  //       newWeights[genre] = (newWeights[genre] ?? 0) + (isGoodSession ? 12 : 4);
+  //     });
+
+  //     const newTitles = existingTitles.includes(chapter.title)
+  //       ? existingTitles
+  //       : [...existingTitles, chapter.title];
+
+  //     await supabase
+  //       .from("profiles")
+  //       .update({ taste_weights: newWeights, favorite_titles: newTitles })
+  //       .eq("id", userId);
+  //   };
+
+  //   updateProfile();
+  // }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
+  // ── WRITE TASTE PROFILE + SESSION ON SESSION END ──
   useEffect(() => {
     if (status !== "ended") return;
     if (!userId || userId.startsWith("anon_")) return;
@@ -381,8 +424,10 @@ export default function ChapterPage() {
       ? Math.floor((Date.now() - (match.matchedAt || Date.now())) / 1000)
       : 0;
     const isGoodSession = sessionDuration > 60;
+    const outcome = endReason === "partner_skipped" ? "skip" : "complete";
 
     const updateProfile = async () => {
+      // 1. taste weights
       const { data: profile } = await supabase
         .from("profiles")
         .select("taste_weights, favorite_titles")
@@ -395,6 +440,7 @@ export default function ChapterPage() {
         (profile?.favorite_titles as string[]) ?? [];
 
       const newWeights = { ...existingWeights };
+
       chapter.genres.forEach((genre) => {
         newWeights[genre] = (newWeights[genre] ?? 0) + (isGoodSession ? 12 : 4);
       });
@@ -405,13 +451,38 @@ export default function ChapterPage() {
 
       await supabase
         .from("profiles")
-        .update({ taste_weights: newWeights, favorite_titles: newTitles })
+        .update({
+          taste_weights: newWeights,
+          favorite_titles: newTitles,
+        })
         .eq("id", userId);
+
+      // 2. insert session row
+      await supabase.from("sessions").insert({
+        user_a: userId,
+        user_b: match?.partnerUserId ?? null,
+        chapter_id: id,
+        match_score: (match?.similarity ?? 0) / 100,
+        outcome,
+        duration_seconds: sessionDuration,
+        ended_at: new Date().toISOString(),
+      });
+
+      // 3. today's session count
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
+
+      const { count } = await supabase
+        .from("sessions")
+        .select("id", { count: "exact", head: true })
+        .eq("user_a", userId)
+        .gte("created_at", todayStart.toISOString());
+
+      setSessionTodayCount(count ?? 1);
     };
 
     updateProfile();
   }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
-
   const handleJoinQueue = () => {
     if (!authReady) return;
     setQueueEnabled(true);
@@ -632,7 +703,17 @@ export default function ChapterPage() {
             </div>
             <div className={styles.postStatDivider} />
             <div className={styles.postStat}>
-              <span className={styles.postStatValue}>1st</span>
+              <span className={styles.postStatValue}>
+                {sessionTodayCount === null
+                  ? "—"
+                  : sessionTodayCount === 1
+                    ? "1st"
+                    : sessionTodayCount === 2
+                      ? "2nd"
+                      : sessionTodayCount === 3
+                        ? "3rd"
+                        : `${sessionTodayCount}th`}
+              </span>
               <span className={styles.postStatLabel}>SESSION TODAY</span>
             </div>
           </div>

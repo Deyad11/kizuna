@@ -12,7 +12,8 @@ export interface MatchPayload {
   sessionId: string;
   chapterId: string;
   similarity: number;  
-    matchedAt?: number;  // add this
+    matchedAt?: number; 
+      partnerUserId?: string; // add this
  // 0-100
 }
 
@@ -132,7 +133,8 @@ const resetQueue = useCallback(() => {
     sendMessage,
     skip,
     leaveQueue,
-      resetQueue,   // ← ADD
+      resetQueue, 
+        // ← ADD
 
   };
 }
